@@ -1,1 +1,1 @@
-docs/hotkey_selection_tool.md
+see: [docs/README.md](docs/README.md)
