@@ -15,34 +15,14 @@
 #include <sys/time.h>
 #include <termios.h>
 #include <signal.h>
+#include <X11/extensions/xf86vmode.h>
+#include "windowmanager.h"
 
 int main(int argc, char *argv[]) {
-    Display *display = XOpenDisplay(NULL);
+    auto *windowManager = new WindowManager();
 
-    Screen *scrn = DefaultScreenOfDisplay(display);
-
-    int height = scrn->height;
-    int width = scrn->width;
-
-    XVisualInfo vinfo;
-    XMatchVisualInfo(display, DefaultScreen(display), 32, TrueColor, &vinfo);
-
-    XSetWindowAttributes attr;
-    attr.colormap = XCreateColormap(display, DefaultRootWindow(display), vinfo.visual, AllocNone);
-    attr.border_pixel = 0;
-    attr.background_pixel = 0;
-
-    Window win = XCreateWindow(display, DefaultRootWindow(display), 0, 0, width, height, 0, vinfo.depth, InputOutput,
-                               vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel | FocusChangeMask, &attr);
-
-    XSelectInput(display, win, StructureNotifyMask);
-
-    GC gc = XCreateGC(display, win, 0, 0);
-
-    Atom wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", 0);
-    XSetWMProtocols(display, win, &wm_delete_window, 1);
-
-    XMapWindow(display, win);
+    Display *display = windowManager->getDisplay();
+    Window window = windowManager->getWindow();
 
     struct input_event ev[64];
     int fevdev = -1;
@@ -51,7 +31,8 @@ int main(int argc, char *argv[]) {
     int rd;
     int value;
     char name[256] = "Unknown";
-    char *device = "/dev/input/event24";
+    // TODO: get device dynamically
+    char *device = "/dev/input/event11";
 
     fevdev = open(device, O_RDONLY);
     if (fevdev == -1) {
@@ -101,11 +82,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // TODO: after this exits a ton of newlines are dumped
+
     // close grabbed keyboard
     ioctl(fevdev, EVIOCGRAB, 1);
     close(fevdev);
 
-    XDestroyWindow(display, win);
-    XCloseDisplay(display);
+    windowManager->destroyWindow();
     return 0;
 }
