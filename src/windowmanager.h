@@ -2,11 +2,6 @@
 #include <X11/Xutil.h>
 #include <X11/extensions/xf86vmode.h>
 
-#ifndef HKSEL_WINDOWMANAGER_H
-#define HKSEL_WINDOWMANAGER_H
-
-#endif //HKSEL_WINDOWMANAGER_H
-
 class WindowManager {
 private:
     Screen* getScreen();

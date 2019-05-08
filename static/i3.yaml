@@ -1,0 +1,13 @@
+hotkeys:
+        - fullscreen:
+                description: toggles fullscreen for current application
+                keys:
+                        - mod
+                        - f
+        - exit:
+                description: closes focused window
+                keys:
+                        - mod
+                        - shfit
+                        - q
+
