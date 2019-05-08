@@ -37,10 +37,6 @@ void WindowManager::setWindowSettings() {
     XMapRaised(display, this->window);
 
     XSelectInput(display, this->window, StructureNotifyMask);
-
-    GC gc = XCreateGC(display, this->window, 0, 0);
-
-    XSetBackground(display, gc, 12523);
 }
 
 Display* WindowManager::getDisplay() {
