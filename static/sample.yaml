@@ -1,0 +1,24 @@
+application:
+        wm_name: i3
+        wm_class: i3
+        hotkeys:
+                - fullscreen:
+                        description: toggles fullscreen for focused window
+                        tags:
+                                - fullscreen
+                                - window
+                                - toggle
+                        keys:
+                                - mod
+                                - f
+                - exit:
+                        description: closes focused window
+                        tags:
+                                - close
+                                - exit
+                                - quit
+                        keys:
+                                - mod
+                                - shfit
+                                - q
+
