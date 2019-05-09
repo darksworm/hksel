@@ -1,4 +1,3 @@
-
 #include "windowmanager.h"
 
 typedef struct {
