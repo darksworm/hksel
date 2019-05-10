@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project(HKSEL)
 
-add_executable(HKSEL main.cpp windowmanager.cpp keyboardmanager.cpp keyboardmanager.h)
+add_executable(HKSEL main.cpp windowmanager.cpp keyboardmanager.cpp keyboardmanager.h lib/keycode/keycode.h)
+add_subdirectory(lib/keycode)
 
 FIND_PACKAGE(X11)
 FIND_LIBRARY(YAML_LIB yaml-cpp)

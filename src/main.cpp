@@ -6,6 +6,7 @@
 
 #include "windowmanager.h"
 #include "keyboardmanager.h"
+#include "lib/keycode/keycode.h"
 
 int main(int argc, char *argv[]) {
     auto *windowManager = new WindowManager();
@@ -39,12 +40,16 @@ int main(int argc, char *argv[]) {
 
 
         // todo: handle exception
-        int keyPress = keyboardManager->readKeypress();
+        auto keyCode = (unsigned) keyboardManager->readKeypress();
 
-        printf("%d\n", keyPress);
+        if (keyCode == 0) {
+            continue;
+        }
+
+        printf("RAW: %s FORMATTED: %s\n", keycode_linux_rawname(keyCode), keycode_linux_name(keycode_linux_to_hid(keyCode)));
 
         // exit the loop if exit button is pressed
-        if (keyPress == 1) {
+        if (keyCode == 1) {
             keep_running = 0;
         }
     }

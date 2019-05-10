@@ -1,0 +1,4 @@
+[submodule "src/lib/keycode/depp-keycode"]
+	path = src/lib/keycode/depp-keycode
+	url = https://github.com/depp/keycode
+	branch = master
