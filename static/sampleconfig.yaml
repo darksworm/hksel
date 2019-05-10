@@ -9,8 +9,8 @@ application:
                                 - window
                                 - toggle
                         keys:
-                                - mod
-                                - f
+                                - META
+                                - F
                 - exit:
                         description: closes focused window
                         tags:
@@ -18,7 +18,7 @@ application:
                                 - exit
                                 - quit
                         keys:
-                                - mod
-                                - shfit
-                                - q
+                                - META
+                                - SHIFT
+                                - Q
 
