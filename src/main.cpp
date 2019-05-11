@@ -4,11 +4,17 @@
 #include <string.h>
 #include <yaml-cpp/yaml.h>
 
-#include "windowmanager.h"
-#include "keyboardmanager.h"
+#include "gui/windowmanager.h"
+#include "input/keyboardmanager.h"
 #include "lib/keycode/keycode.h"
+#include "hotkey/hotkeyloader_yaml.h"
 
 int main(int argc, char *argv[]) {
+    std::vector<Hotkey> hotkeys;
+
+    // TODO: config manager?
+    load_hotkeys_yaml((char *)"../static/sampleconfig.yaml", &hotkeys);
+
     auto *windowManager = new WindowManager();
     auto *keyboardManager = new KeyboardManager();
 
