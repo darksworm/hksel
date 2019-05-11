@@ -27,6 +27,10 @@ int KeyboardManager::readKeypress() {
 }
 
 bool KeyboardManager::openKeyboard() {
+    // sleep for 100ms before opening keyboard, otherwise key spam might occur
+    // after the application is closed - https://stackoverflow.com/questions/41995349
+    usleep(100000);
+
     int result = 0;
 
     char name[256] = "Unknown";
