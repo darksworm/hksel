@@ -1,4 +1,4 @@
-#include "windowmanager.h"
+#include "WindowManager.h"
 
 typedef struct {
     unsigned long flags;
@@ -66,8 +66,7 @@ void WindowManager::newWindow() {
     XSetWindowAttributes attr;
     attr.colormap = XCreateColormap(display, DefaultRootWindow(display), vinfo.visual, AllocNone);
     attr.border_pixel = 0;
-    // TODO : this should be 0 to be transparent
-    attr.background_pixel = 44545521154L;
+    attr.background_pixel = 0;
 
     // when setting y to 0, in i3 the window appears in a negative y position, 1 works tho
     this->window = XCreateWindow(display, DefaultRootWindow(display), 0, 1, (unsigned) width, (unsigned) height - 1, 0,

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fcntl.h>
 #include <linux/input.h>
 #include <unistd.h>

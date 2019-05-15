@@ -1,4 +1,4 @@
-#include "keyboardmanager.h"
+#include "KeyboardManager.h"
 
 void KeyboardManager::closeKeyboard() {
     ioctl(fevdev, EVIOCGRAB, 1);
@@ -36,7 +36,7 @@ bool KeyboardManager::openKeyboard() {
     char name[256] = "Unknown";
     // TODO: get device dynamically
     // FOR NOW checking evtest
-    char *device = "/dev/input/event5";
+    char *device = "/dev/input/event24";
 
     fevdev = open(device, O_RDONLY);
     if (fevdev == -1) {
