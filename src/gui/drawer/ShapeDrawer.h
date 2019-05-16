@@ -11,23 +11,21 @@ private:
         auto display = windowManager->getDisplay();
         auto window = windowManager->getWindow();
 
+        // TODO: these should be config options
         int screen_num = DefaultScreen(display);
-
-        // TODO: these should be config settings
         unsigned int line_width = 2;
         int line_style = LineSolid;
         int cap_style = CapButt;
         int join_style = JoinBevel;
-        int fill_style = FillSolid;
-        unsigned long foreground_fill_style = WhitePixel(display, screen_num);
-        unsigned long background_fill_style = BlackPixel(display, screen_num);
 
         GC gc = XCreateGC(display, window, 0, nullptr);
 
-        XSetForeground(display, gc, foreground_fill_style);
-        XSetBackground(display, gc, background_fill_style);
-        XSetLineAttributes(display, gc, line_width, line_style, cap_style, join_style);
-        XSetFillStyle(display, gc, fill_style);
+        XSetForeground(display, gc, WhitePixel(display, screen_num));
+        XSetBackground(display, gc, BlackPixel(display, screen_num));
+
+        XSetLineAttributes(display, gc,
+                           line_width, line_style, cap_style, join_style);
+        XSetFillStyle(display, gc, FillSolid);
 
         return gc;
     }
@@ -43,7 +41,7 @@ protected:
 
     virtual ShapeProperties calcShapeProps(Window window) = 0;
 
-    virtual XPoint* getNextShapePosition(ShapeProperties shapeProperties) = 0;
+    virtual XPoint *getNextShapePosition(ShapeProperties shapeProperties) = 0;
 
 public:
     ShapeDrawer(WindowManager *windowManager) {

@@ -1,7 +1,8 @@
 #include "HotkeyPickerDrawer.h"
 #include "../exceptions/OutOfBounds.h"
 
-HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType shapeType, std::vector<Hotkey> *hotkeys) {
+HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType shapeType,
+                                       std::vector<Hotkey> *hotkeys) {
     this->windowManager = windowManager;
     this->page = 0;
     this->selectedShape = nullptr;
@@ -31,6 +32,10 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
         };
 
         shape = shapeDrawer->drawNextShape(shapeProperties, shape);
+
+        if (selected) {
+            this->selectedShape = &shape;
+        }
 
         shapes.push_back(shape);
     }

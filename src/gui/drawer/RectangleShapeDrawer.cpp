@@ -7,7 +7,7 @@ Shape RectangleShapeDrawer::calcNextShape(ShapeProperties properties, Hotkey *ho
 Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Shape shape) {
     XPoint *pos = getNextShapePosition(shapeProperties);
 
-    XDrawRectangle(windowManager->getDisplay(), windowManager->getWindow(), graphicsContext, 100, 100,
+    XDrawRectangle(windowManager->getDisplay(), windowManager->getWindow(), graphicsContext, pos->x, pos->y,
                    shapeProperties.width, shapeProperties.height);
 
     // TODO: these are probably unnecessary ...
@@ -30,7 +30,7 @@ XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperti
     } else {
         // TODO: this is temporary positioning
         newShapePosition = new XPoint{
-                .x = (short) (lastShapePosition->x + shapeProperties.xMargin),
+                .x = (short) (lastShapePosition->x + shapeProperties.width + shapeProperties.xMargin),
                 .y = (short) shapeProperties.yMargin
         };
     }
