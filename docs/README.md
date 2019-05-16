@@ -1,6 +1,6 @@
 ### The problem
 
-There are too many hotkeys to remember. When learning a new tool
+There are too many hotkeys to remember. Learning a new tool
 hands-on in a work setting usually leads to the use of inefficient
 action paths due to frustrations (deadlines, online-only manuals, etc.)
 
