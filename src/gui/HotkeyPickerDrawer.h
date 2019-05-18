@@ -11,9 +11,10 @@
 #include "drawer/ShapeDrawerFactory.h"
 
 enum HotkeyPickerMove {
+    NONE,
     LEFT,
     RIGHT,
-    TOP,
+    UP,
     DOWN
 };
 
@@ -41,7 +42,7 @@ public:
 
     void drawFrame(Hotkey* selectedHotkey);
 
-    void move(HotkeyPickerMove move);
+    bool move(HotkeyPickerMove move);
 
     Hotkey* getSelectedHotkey();
 };

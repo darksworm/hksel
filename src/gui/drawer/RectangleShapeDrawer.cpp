@@ -7,7 +7,9 @@ Shape RectangleShapeDrawer::calcNextShape(ShapeProperties properties, Hotkey *ho
 Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Shape shape) {
     XPoint *pos = getNextShapePosition(shapeProperties);
 
-    XDrawRectangle(windowManager->getDisplay(), windowManager->getWindow(), graphicsContext, pos->x, pos->y,
+    auto gc = shape.selected ? selectedShapeGC : shapeGC;
+
+    XDrawRectangle(windowManager->getDisplay(), windowManager->getWindow(), gc, pos->x, pos->y,
                    shapeProperties.width, shapeProperties.height);
 
     // TODO: these are probably unnecessary ...
@@ -28,10 +30,21 @@ XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperti
                 .y = (short) shapeProperties.yMargin
         };
     } else {
+        XPoint offset;
+
+        if (lastShapePosition->x >= shapeProperties.width * shapeProperties.columns) {
+            // move to next line
+            offset.y = (short) (shapeProperties.height + shapeProperties.yMargin + lastShapePosition->y + shapeProperties.yMargin);
+            offset.x = 0;
+        } else {
+            offset.x = (short) (lastShapePosition->x + shapeProperties.width + shapeProperties.xMargin);
+            offset.y = (short) (lastShapePosition->y);
+        }
+
         // TODO: this is temporary positioning
         newShapePosition = new XPoint{
-                .x = (short) (lastShapePosition->x + shapeProperties.width + shapeProperties.xMargin),
-                .y = (short) shapeProperties.yMargin
+                .x = (short) (shapeProperties.xMargin + offset.x),
+                .y = (short) (offset.y)
         };
     }
 
@@ -43,8 +56,8 @@ ShapeProperties RectangleShapeDrawer::calcShapeProps(Window window) {
     ShapeProperties shapeProperties{
             .width = 220,
             .height = 120,
-            .xMargin = 10,
-            .yMargin = 10,
+            .xMargin = 20,
+            .yMargin = 20,
             .rows = 4,
             .columns = 4,
     };

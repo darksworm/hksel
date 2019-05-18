@@ -10,6 +10,9 @@
 #include "hotkey/hotkeyloader_yaml.h"
 #include "gui/drawer/ShapeDrawerFactory.h"
 #include "gui/HotkeyPickerDrawer.h"
+#include "input/x11_keycodes.h"
+
+#define CONSUME_KB false
 
 int main(int argc, char *argv[]) {
     std::vector<Hotkey> hotkeys;
@@ -24,51 +27,94 @@ int main(int argc, char *argv[]) {
     Display *display = windowManager->getDisplay();
     Window window = windowManager->getWindow();
 
-    if (!keyboardManager->openKeyboard()) {
+    if (CONSUME_KB && !keyboardManager->openKeyboard()) {
         printf("Couldn't open keyboard");
+        exit(1);
     }
 
     int keep_running = 1;
     XEvent event;
 
-    hotkeyPickerDrawer->drawFrame(&* hotkeys.begin());
+    XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
+    hotkeyPickerDrawer->drawFrame(&*hotkeys.begin());
 
     while (keep_running) {
+        unsigned keyCode = 0;
+
         // read xevents
         while (XPending(display)) {
             XNextEvent(display, &event);
+
             switch (event.type) {
-                case ClientMessage:
-                    if (event.xclient.message_type == XInternAtom(display, "WM_PROTOCOLS", 1) &&
-                        (Atom) event.xclient.data.l[0] == XInternAtom(display, "WM_DELETE_WINDOW", 1))
-                        keep_running = 0;
+                case DestroyNotify:
+                case UnmapNotify:
+                    keep_running = 0;
                     break;
-                    // Manage events...
-                default:
+                case KeyPress: {
+                    if (CONSUME_KB) {
+                        break;
+                    }
+                    keyCode = x11_keycode_to_libinput_code(XLookupKeysym(&event.xkey, 0));
+                    break;
+                }
+
+                case ConfigureNotify:
+                    XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
+                    auto hk = hotkeyPickerDrawer->getSelectedHotkey() ? hotkeyPickerDrawer->getSelectedHotkey()
+                                                                      : &*hotkeys.begin();
+                    hotkeyPickerDrawer->drawFrame(hk);
                     break;
             }
         }
 
-
-        // todo: handle exception
-        auto keyCode = (unsigned) keyboardManager->readKeypress();
+        if (CONSUME_KB) {
+            // todo: handle exception
+            keyCode = (unsigned) keyboardManager->readKeypress();
+        }
 
         if (keyCode == 0) {
             continue;
         }
 
-        printf("RAW: %s FORMATTED: %s\n", keycode_linux_rawname(keyCode),
-               keycode_linux_name(keycode_linux_to_hid(keyCode)));
+        printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
+               keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
-        // exit the loop if exit button is pressed
-        if (keyCode == 1) {
-            keep_running = 0;
-        } else {
+        HotkeyPickerMove move = NONE;
+
+        switch (keyCode) {
+            case KEY_ESC:
+                keep_running = 0;
+                break;
+            case KEY_H:
+                move = LEFT;
+                break;
+            case KEY_L:
+                move = RIGHT;
+                break;
+            case KEY_J:
+                move = DOWN;
+                break;
+            case KEY_K:
+                move = UP;
+                break;
+        }
+
+        bool moved = false;
+
+        XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
+
+        if (move != NONE) {
+            moved = hotkeyPickerDrawer->move(move);
+        }
+
+        if (move == NONE || !moved) {
             hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
         }
     }
 
-    keyboardManager->closeKeyboard();
+    if (CONSUME_KB) {
+        keyboardManager->closeKeyboard();
+    }
     windowManager->destroyWindow();
 
     return 0;

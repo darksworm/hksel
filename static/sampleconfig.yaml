@@ -2,22 +2,78 @@ app_name: i3wm
 wm_name: i3
 wm_class: i3
 hotkeys:
-    - name: fullscreen
-      description: toggles fullscreen for focused window
-      tags:
-        - fullscreen
-        - window
-        - toggle
-      keys:
-        - META
-        - F
-    - name: exit
-      description: closes focused window
-      tags:
-        - close
-        - exit
-        - quit
-      keys:
-        - META
-        - SHIFT
-        - Q
+  - name: fullscreen
+    description: toggles fullscreen for focused window
+    tags:
+      - fullscreen
+      - window
+      - toggle
+    keys:
+      - META
+      - F
+  - name: exit
+    description: closes focused window
+    tags:
+      - close
+      - exit
+      - quit
+    keys:
+      - META
+      - SHIFT
+      - Q
+  - name: toggle_i3bar
+    description: toggles i3bar
+    tags:
+      - i3bar
+      - toggle
+    keys:
+      - META
+      - T
+  - name: discord
+    description: opens discord
+    tags:
+      - open
+      - discord
+      - launch
+    keys:
+      - META
+      - O
+  - name: password_manager
+    description: opens keepass-web
+    tags:
+      - password
+      - manager
+      - open
+      - launch
+    keys:
+      - META
+      - P
+  - name: lock
+    description: locks pc
+    tags:
+      - lock
+      - blurlock
+    keys:
+      - META
+      - F12
+  - name: pavucontrol
+    description: opens pavucontrol
+    tags:
+      - audio
+      - launch
+      - pavucontrol
+      - volume
+    keys:
+      - META
+      - CONTROL
+      - M
+  - name: kill
+    description: lauch visual program killer
+    tags:
+      - kill
+      - process
+      - destroy
+    keys:
+      - META
+      - CONTROL
+      - X

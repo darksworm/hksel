@@ -18,7 +18,6 @@ HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType s
 void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     auto start = getPageHotkeyStart();
 
-    XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
     shapes.clear();
     shapeDrawer->lastShapePosition = nullptr;
 
@@ -33,11 +32,11 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
 
         shape = shapeDrawer->drawNextShape(shapeProperties, shape);
 
-        if (selected) {
-            this->selectedShape = &shape;
-        }
-
         shapes.push_back(shape);
+
+        if (selected) {
+            this->selectedShape = &*(this->shapes.end() - 1);
+        }
     }
 }
 
@@ -62,32 +61,42 @@ void HotkeyPickerDrawer::goToHotkey(long hotkeyIdx) {
     drawFrame(hotkey);
 }
 
-void HotkeyPickerDrawer::move(HotkeyPickerMove move) {
+bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
     bool canMove = false;
     long newSelectedShapeIdx = 0;
 
+    char* debug;
+
     switch (move) {
-        case HotkeyPickerMove::LEFT:
+        case LEFT:
             canMove = selectedShape->index >= 1;
             newSelectedShapeIdx = selectedShape->index - 1;
+            debug = "LEFT";
             break;
-        case HotkeyPickerMove::RIGHT:
+        case RIGHT:
             canMove = selectedShape->index + 1 < hotkeys->size();
             newSelectedShapeIdx = selectedShape->index + 1;
+            debug = "RIGHT";
             break;
-        case HotkeyPickerMove::TOP:
-            canMove = selectedShape->index - shapeProperties.columns >= 0;
-            newSelectedShapeIdx = selectedShape->index - shapeProperties.columns;
+        case UP:
+            canMove = selectedShape->index - 1 - shapeProperties.columns >= 0;
+            newSelectedShapeIdx = selectedShape->index - shapeProperties.columns - 1;
+            debug = "UP";
             break;
-        case HotkeyPickerMove::DOWN:
-            canMove = selectedShape->index + shapeProperties.columns < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + shapeProperties.columns;
+        case DOWN:
+            canMove = selectedShape->index + shapeProperties.columns + 1 < hotkeys->size();
+            newSelectedShapeIdx = selectedShape->index + shapeProperties.columns + 1;
+            debug = "DOWN";
             break;
     }
+
+    printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index, (int)newSelectedShapeIdx);
 
     if (canMove) {
         goToHotkey(newSelectedShapeIdx);
     }
+
+    return canMove;
 }
 
 Hotkey *HotkeyPickerDrawer::getSelectedHotkey() {

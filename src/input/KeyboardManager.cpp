@@ -36,7 +36,7 @@ bool KeyboardManager::openKeyboard() {
     char name[256] = "Unknown";
     // TODO: get device dynamically
     // FOR NOW checking evtest
-    char *device = "/dev/input/event24";
+    char *device = "/dev/input/event11";
 
     fevdev = open(device, O_RDONLY);
     if (fevdev == -1) {
