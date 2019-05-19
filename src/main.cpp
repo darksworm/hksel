@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <yaml-cpp/yaml.h>
+#include <thread>
 
 #include "gui/WindowManager.h"
 #include "input/KeyboardManager.h"
@@ -71,6 +72,13 @@ int main(int argc, char *argv[]) {
             // todo: handle exception
             keyCode = (unsigned) keyboardManager->readKeypress();
         }
+
+        /*
+        * TODO: this probably shouldn't be a static value
+        *   we should probably calculate how much time has passed between cycles
+        *   and sleep for (16.6ms - passed time)
+        */
+        std::this_thread::sleep_for(std::chrono::nanoseconds(16600000));
 
         if (keyCode == 0) {
             continue;
