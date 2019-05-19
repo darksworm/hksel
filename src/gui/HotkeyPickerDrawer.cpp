@@ -80,12 +80,12 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
             break;
         case UP:
             canMove = selectedShape->index - 1 - shapeProperties.itemCounts.x >= 0;
-            newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x - 1;
+            newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x;
             debug = "UP";
             break;
         case DOWN:
             canMove = selectedShape->index + shapeProperties.itemCounts.x + 1 < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x + 1;
+            newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x;
             debug = "DOWN";
             break;
     }

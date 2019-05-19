@@ -32,7 +32,7 @@ XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperti
     } else {
         XPoint offset;
 
-        if (lastShapePosition->x >= shapeProperties.dimensions.x * shapeProperties.itemCounts.x) {
+        if (lastShapePosition->x >= shapeProperties.dimensions.x * (shapeProperties.itemCounts.x - 1)) {
             // move to next line
             offset.y = (short) (shapeProperties.dimensions.y + shapeProperties.margins.y + lastShapePosition->y +
                                 shapeProperties.margins.y);
