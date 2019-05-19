@@ -41,7 +41,7 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
 }
 
 std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
-    int hotkeysPerPage = shapeProperties.rows * shapeProperties.columns;
+    int hotkeysPerPage = shapeProperties.itemCounts.y * shapeProperties.itemCounts.x;
 
     if (page > 0 && hotkeys->size() < hotkeysPerPage) {
         throw OutOfBounds();
@@ -51,7 +51,7 @@ std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
 }
 
 int HotkeyPickerDrawer::getHotkeyPage(long index) {
-    return (int) (index / (this->shapeProperties.columns * this->shapeProperties.rows));
+    return (int) (index / (this->shapeProperties.itemCounts.x * this->shapeProperties.itemCounts.y));
 }
 
 void HotkeyPickerDrawer::goToHotkey(long hotkeyIdx) {
@@ -79,13 +79,13 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
             debug = "RIGHT";
             break;
         case UP:
-            canMove = selectedShape->index - 1 - shapeProperties.columns >= 0;
-            newSelectedShapeIdx = selectedShape->index - shapeProperties.columns - 1;
+            canMove = selectedShape->index - 1 - shapeProperties.itemCounts.x >= 0;
+            newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x - 1;
             debug = "UP";
             break;
         case DOWN:
-            canMove = selectedShape->index + shapeProperties.columns + 1 < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + shapeProperties.columns + 1;
+            canMove = selectedShape->index + shapeProperties.itemCounts.x + 1 < hotkeys->size();
+            newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x + 1;
             debug = "DOWN";
             break;
     }
