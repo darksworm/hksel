@@ -1,5 +1,6 @@
 #include "HotkeyPickerDrawer.h"
 #include "../exceptions/OutOfBounds.h"
+#include "dimensions.h"
 
 HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType shapeType,
                                        std::vector<Hotkey> *hotkeys) {
@@ -21,6 +22,9 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     shapes.clear();
     shapeDrawer->lastShapePosition = nullptr;
 
+    auto windowDimensions = new Dimensions;
+    windowManager->getWindowDimensions(&windowDimensions->x, &windowDimensions->y);
+
     for (auto it = start; it != hotkeys->end(); ++it) {
         bool selected = &*it == selectedHotkey;
 
@@ -30,7 +34,7 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
                 .hotkey = &*it
         };
 
-        shape = shapeDrawer->drawNextShape(shapeProperties, shape);
+        shape = shapeDrawer->drawNextShape(shapeProperties, *windowDimensions, shape);
 
         shapes.push_back(shape);
 

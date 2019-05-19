@@ -16,5 +16,8 @@ private:
 public:
     Window getWindow();
     Display* getDisplay();
+
+    void getWindowDimensions(unsigned int* width, unsigned int* height);
+
     void destroyWindow();
 };

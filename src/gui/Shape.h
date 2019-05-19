@@ -2,11 +2,7 @@
 
 #include <X11/Xutil.h>
 #include "../hotkey/hotkey.h"
-
-struct Dimensions {
-    unsigned x;
-    unsigned y;
-};
+#include "dimensions.h"
 
 struct ShapeProperties {
     Dimensions dimensions;

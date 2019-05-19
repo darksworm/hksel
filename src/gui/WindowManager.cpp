@@ -96,3 +96,11 @@ void WindowManager::destroyWindow() {
     XDestroyWindow( this->getDisplay(), this->getWindow() );
     XCloseDisplay( this->getDisplay() );
 }
+
+void WindowManager::getWindowDimensions(unsigned int *width, unsigned int *height) {
+    int empty;
+    unsigned int u_empty;
+    Window root;
+
+    XGetGeometry(display, window, &root, &empty, &empty, width, height, &u_empty, &u_empty);
+}

@@ -88,11 +88,11 @@ protected:
 
     virtual Shape calcNextShape(ShapeProperties properties, Hotkey *hotkey, bool selected, long index) = 0;
 
-    virtual Shape drawNextShape(ShapeProperties shapeProperties, Shape shape) = 0;
+    virtual Shape drawNextShape(ShapeProperties shapeProperties, Dimensions windowDimensions, Shape shape) = 0;
 
     virtual ShapeProperties calcShapeProps(Window window) = 0;
 
-    virtual XPoint *getNextShapePosition(ShapeProperties shapeProperties) = 0;
+    virtual XPoint *getNextShapePosition(ShapeProperties shapeProperties, Dimensions windowDimensions) = 0;
 
     void drawText(ShapeProperties shapeProperties, Shape shape) {
         XDrawString(

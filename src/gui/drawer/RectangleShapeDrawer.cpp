@@ -4,8 +4,8 @@ Shape RectangleShapeDrawer::calcNextShape(ShapeProperties properties, Hotkey *ho
     return Shape();
 }
 
-Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Shape shape) {
-    XPoint *pos = getNextShapePosition(shapeProperties);
+Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Dimensions windowDimensions, Shape shape) {
+    XPoint *pos = getNextShapePosition(shapeProperties, windowDimensions);
 
     auto gc = shape.selected ? selectedShapeGC : shapeGC;
 
@@ -20,23 +20,29 @@ Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Shape
     return shape;
 }
 
-XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperties) {
+XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperties, Dimensions windowDimensions) {
     XPoint *lastShapePosition = this->lastShapePosition;
     XPoint *newShapePosition;
 
+    unsigned int xCenterMargin;
+    unsigned int line_width = shapeProperties.dimensions.x * shapeProperties.itemCounts.x +
+                              (shapeProperties.margins.x * shapeProperties.itemCounts.x - 1);
+
+    xCenterMargin = (windowDimensions.x - line_width) / 2;
+
     if (!lastShapePosition) {
         newShapePosition = new XPoint{
-                .x = (short) shapeProperties.margins.x,
+                .x = (short) xCenterMargin,
                 .y = (short) shapeProperties.margins.y
         };
     } else {
         XPoint offset;
 
-        if (lastShapePosition->x >= shapeProperties.dimensions.x * (shapeProperties.itemCounts.x - 1)) {
+        if (lastShapePosition->x >= shapeProperties.dimensions.x * (shapeProperties.itemCounts.x - 1) + xCenterMargin) {
             // move to next line
             offset.y = (short) (shapeProperties.dimensions.y + shapeProperties.margins.y + lastShapePosition->y +
                                 shapeProperties.margins.y);
-            offset.x = 0;
+            offset.x = (short) xCenterMargin;
         } else {
             offset.x = (short) (lastShapePosition->x + shapeProperties.dimensions.x + shapeProperties.margins.x);
             offset.y = (short) (lastShapePosition->y);
@@ -44,7 +50,7 @@ XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperti
 
         // TODO: this is temporary positioning
         newShapePosition = new XPoint{
-                .x = (short) (shapeProperties.margins.x + offset.x),
+                .x = (short) (offset.x),
                 .y = (short) (offset.y)
         };
     }
