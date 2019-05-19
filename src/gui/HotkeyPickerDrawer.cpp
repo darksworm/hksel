@@ -25,6 +25,9 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     auto windowDimensions = new Dimensions;
     windowManager->getWindowDimensions(&windowDimensions->x, &windowDimensions->y);
 
+    int shapeCnt = shapeProperties.itemCounts.x * shapeProperties.itemCounts.y;
+    int drawnShapeCnt = 0;
+
     for (auto it = start; it != hotkeys->end(); ++it) {
         bool selected = &*it == selectedHotkey;
 
@@ -40,6 +43,10 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
 
         if (selected) {
             this->selectedShape = &*(this->shapes.end() - 1);
+        }
+
+        if (++drawnShapeCnt >= shapeCnt) {
+            break;
         }
     }
 }
@@ -69,7 +76,7 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
     bool canMove = false;
     long newSelectedShapeIdx = 0;
 
-    char* debug;
+    char *debug;
 
     switch (move) {
         case LEFT:
@@ -94,7 +101,8 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
             break;
     }
 
-    printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index, (int)newSelectedShapeIdx);
+    printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index,
+           (int) newSelectedShapeIdx);
 
     if (canMove) {
         goToHotkey(newSelectedShapeIdx);
