@@ -24,16 +24,20 @@ XPoint *RectangleShapeDrawer::getNextShapePosition(ShapeProperties shapeProperti
     XPoint *lastShapePosition = this->lastShapePosition;
     XPoint *newShapePosition;
 
-    unsigned int xCenterMargin;
+    unsigned int xCenterMargin, yCenterMargin;
+
     unsigned int line_width = shapeProperties.dimensions.x * shapeProperties.itemCounts.x +
                               (shapeProperties.margins.x * shapeProperties.itemCounts.x - 1);
+    unsigned int line_height = shapeProperties.dimensions.y * shapeProperties.itemCounts.y +
+                              (shapeProperties.margins.y * shapeProperties.itemCounts.y - 1);
 
     xCenterMargin = (windowDimensions.x - line_width) / 2;
+    yCenterMargin = (windowDimensions.y - line_height) / 2;
 
     if (!lastShapePosition) {
         newShapePosition = new XPoint{
                 .x = (short) xCenterMargin,
-                .y = (short) shapeProperties.margins.y
+                .y = (short) yCenterMargin
         };
     } else {
         XPoint offset;
