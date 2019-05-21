@@ -23,6 +23,10 @@ public:
         return description;
     }
 
+    const std::string getName() {
+        return name;
+    }
+
     Hotkey(std::vector<std::string> raw_key_names, std::vector<std::string> tags, std::string description,
            std::string name)
             : rawKeyNames(std::move(raw_key_names)), tags(std::move(tags)), description(std::move(description)), name(

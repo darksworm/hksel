@@ -1,5 +1,6 @@
 #include "HotkeyPickerDrawer.h"
 #include "../exceptions/OutOfBounds.h"
+#include "dimensions.h"
 
 HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType shapeType,
                                        std::vector<Hotkey> *hotkeys) {
@@ -21,6 +22,12 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     shapes.clear();
     shapeDrawer->lastShapePosition = nullptr;
 
+    auto windowDimensions = new Dimensions;
+    windowManager->getWindowDimensions(&windowDimensions->x, &windowDimensions->y);
+
+    int shapeCnt = shapeProperties.itemCounts.x * shapeProperties.itemCounts.y;
+    int drawnShapeCnt = 0;
+
     for (auto it = start; it != hotkeys->end(); ++it) {
         bool selected = &*it == selectedHotkey;
 
@@ -30,18 +37,22 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
                 .hotkey = &*it
         };
 
-        shape = shapeDrawer->drawNextShape(shapeProperties, shape);
+        shape = shapeDrawer->drawNextShape(shapeProperties, *windowDimensions, shape);
 
         shapes.push_back(shape);
 
         if (selected) {
             this->selectedShape = &*(this->shapes.end() - 1);
         }
+
+        if (++drawnShapeCnt >= shapeCnt) {
+            break;
+        }
     }
 }
 
 std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
-    int hotkeysPerPage = shapeProperties.rows * shapeProperties.columns;
+    int hotkeysPerPage = shapeProperties.itemCounts.y * shapeProperties.itemCounts.x;
 
     if (page > 0 && hotkeys->size() < hotkeysPerPage) {
         throw OutOfBounds();
@@ -51,7 +62,7 @@ std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
 }
 
 int HotkeyPickerDrawer::getHotkeyPage(long index) {
-    return (int) (index / (this->shapeProperties.columns * this->shapeProperties.rows));
+    return (int) (index / (this->shapeProperties.itemCounts.x * this->shapeProperties.itemCounts.y));
 }
 
 void HotkeyPickerDrawer::goToHotkey(long hotkeyIdx) {
@@ -65,7 +76,7 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
     bool canMove = false;
     long newSelectedShapeIdx = 0;
 
-    char* debug;
+    char *debug;
 
     switch (move) {
         case LEFT:
@@ -79,18 +90,19 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
             debug = "RIGHT";
             break;
         case UP:
-            canMove = selectedShape->index - 1 - shapeProperties.columns >= 0;
-            newSelectedShapeIdx = selectedShape->index - shapeProperties.columns - 1;
+            canMove = selectedShape->index - shapeProperties.itemCounts.x >= 0;
+            newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x;
             debug = "UP";
             break;
         case DOWN:
-            canMove = selectedShape->index + shapeProperties.columns + 1 < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + shapeProperties.columns + 1;
+            canMove = selectedShape->index + shapeProperties.itemCounts.x < hotkeys->size();
+            newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x;
             debug = "DOWN";
             break;
     }
 
-    printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index, (int)newSelectedShapeIdx);
+    printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index,
+           (int) newSelectedShapeIdx);
 
     if (canMove) {
         goToHotkey(newSelectedShapeIdx);

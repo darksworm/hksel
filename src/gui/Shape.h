@@ -2,23 +2,20 @@
 
 #include <X11/Xutil.h>
 #include "../hotkey/hotkey.h"
+#include "dimensions.h"
 
 struct ShapeProperties {
-    unsigned width;
-    unsigned height;
+    Dimensions dimensions;
+    Dimensions margins;
+    Dimensions itemCounts;
 
-    unsigned xMargin;
-    unsigned yMargin;
-
-    unsigned rows;
-    unsigned columns;
+    XRectangle topTextRect;
+    XRectangle midTextRect;
+    XRectangle botTextRect;
 };
 
 struct Shape {
     XPoint position;
-
-    unsigned width;
-    unsigned height;
 
     bool selected;
     long index;
