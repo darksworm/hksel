@@ -3,7 +3,7 @@
 #include <X11/Xutil.h>
 #include <linux/input-event-codes.h>
 
-unsigned x11_keycode_to_libinput_code(unsigned key) {
+unsigned x11_keycode_to_libinput_code(KeySym key) {
     int scancode = 0;
     int code = (int) key;
     if (code >= '0' && code <= '9') {
@@ -199,6 +199,6 @@ unsigned x11_keycode_to_libinput_code(unsigned key) {
                 /// case 0x0003: scancode = KEY_CENTER; break; TODO: wtf is a key_center?
         }
     }
-    
+
     return (unsigned) scancode;
 }

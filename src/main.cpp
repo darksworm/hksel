@@ -4,6 +4,7 @@
 #include <string.h>
 #include <yaml-cpp/yaml.h>
 #include <thread>
+#include <termcap.h>
 
 #include "gui/WindowManager.h"
 #include "input/KeyboardManager.h"
@@ -12,14 +13,19 @@
 #include "gui/drawer/ShapeDrawerFactory.h"
 #include "gui/HotkeyPickerDrawer.h"
 #include "input/x11_keycodes.h"
+#include "input/handler/InputState.h"
+#include "input/handler/InputHandler.h"
+#include "input/handler/InputHandlerFactory.h"
+#include "input/handler/instruction/MoveInputInstruction.h"
 
 #define CONSUME_KB false
+
 
 int main(int argc, char *argv[]) {
     std::vector<Hotkey> hotkeys;
 
     // TODO: config manager?
-    load_hotkeys_yaml((char *) "../static/sampleconfig.yaml", &hotkeys);
+    load_hotkeys_yaml((char *) "../static/i3.yaml", &hotkeys);
 
     auto *windowManager = new WindowManager();
     auto *keyboardManager = new KeyboardManager();
@@ -33,11 +39,14 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    InputState state = InputState::SELECTION;
     int keep_running = 1;
     XEvent event;
 
     XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
     hotkeyPickerDrawer->drawFrame(&*hotkeys.begin());
+
+    InputHandler *inputHandler = nullptr;
 
     while (keep_running) {
         unsigned keyCode = 0;
@@ -51,6 +60,7 @@ int main(int argc, char *argv[]) {
                 case UnmapNotify:
                     keep_running = 0;
                     break;
+
                 case KeyPress: {
                     if (CONSUME_KB) {
                         break;
@@ -84,39 +94,39 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if (!InputHandlerFactory::isCorrectHandler(inputHandler, state)) {
+            inputHandler = InputHandlerFactory::getInputHandler(state);
+        }
+
         printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
                keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
-        HotkeyPickerMove move = NONE;
+        InputInstruction *instruction = inputHandler->handleKeyPress(keyCode);
 
-        switch (keyCode) {
-            case KEY_ESC:
-                keep_running = 0;
-                break;
-            case KEY_H:
-                move = LEFT;
-                break;
-            case KEY_L:
-                move = RIGHT;
-                break;
-            case KEY_J:
-                move = DOWN;
-                break;
-            case KEY_K:
-                move = UP;
-                break;
+        if (instruction->getInputInstruction() == InputInstructionType::NONE) {
+            continue;
         }
 
-        bool moved = false;
-
-        XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
-
-        if (move != NONE) {
-            moved = hotkeyPickerDrawer->move(move);
+        if(instruction->getInputInstruction() == InputInstructionType::EXIT)
+        {
+            keep_running = 0;
+            continue;
         }
 
-        if (move == NONE || !moved) {
-            hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
+        if (dynamic_cast<MoveInputInstruction *>(instruction)) {
+            auto move = ((MoveInputInstruction *)(instruction))->getMoveDirection();
+
+            bool moved = false;
+
+            XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
+
+            if (move != HotkeyPickerMove::NONE) {
+                moved = hotkeyPickerDrawer->move(move);
+            }
+
+            if (move == HotkeyPickerMove::NONE || !moved) {
+                hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
+            }
         }
     }
 

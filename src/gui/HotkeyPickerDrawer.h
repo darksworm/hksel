@@ -10,7 +10,7 @@
 #include "WindowManager.h"
 #include "drawer/ShapeDrawerFactory.h"
 
-enum HotkeyPickerMove {
+enum class HotkeyPickerMove {
     NONE,
     LEFT,
     RIGHT,
@@ -46,4 +46,5 @@ public:
 
     Hotkey* getSelectedHotkey();
 };
+
 

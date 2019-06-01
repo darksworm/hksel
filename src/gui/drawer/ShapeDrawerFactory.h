@@ -2,7 +2,7 @@
 
 #include "RectangleShapeDrawer.h"
 
-enum ShapeType {
+enum class ShapeType {
     RECTANGLE
 };
 

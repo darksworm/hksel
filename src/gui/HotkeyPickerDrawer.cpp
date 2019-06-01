@@ -13,9 +13,6 @@ HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType s
     shapeProperties = shapeDrawer->calcShapeProps(windowManager->getWindow());
 }
 
-// TODO: move this somewhere else?
-
-
 void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     auto start = getPageHotkeyStart();
 
@@ -79,22 +76,22 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
     char *debug;
 
     switch (move) {
-        case LEFT:
+        case HotkeyPickerMove::LEFT:
             canMove = selectedShape->index >= 1;
             newSelectedShapeIdx = selectedShape->index - 1;
             debug = "LEFT";
             break;
-        case RIGHT:
+        case HotkeyPickerMove::RIGHT:
             canMove = selectedShape->index + 1 < hotkeys->size();
             newSelectedShapeIdx = selectedShape->index + 1;
             debug = "RIGHT";
             break;
-        case UP:
+        case HotkeyPickerMove::UP:
             canMove = selectedShape->index - shapeProperties.itemCounts.x >= 0;
             newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x;
             debug = "UP";
             break;
-        case DOWN:
+        case HotkeyPickerMove::DOWN:
             canMove = selectedShape->index + shapeProperties.itemCounts.x < hotkeys->size();
             newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x;
             debug = "DOWN";
