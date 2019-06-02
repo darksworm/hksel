@@ -3,12 +3,12 @@
 #include <linux/input-event-codes.h>
 #include "SelectionInputHandler.h"
 #include "../../gui/HotkeyPickerDrawer.h"
-#include "instruction/MoveInputInstruction.h"
+#include "instruction/MoveInstruction.h"
 
-InputInstruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
+Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
     auto instruction = InputHandler::handleKeyPress(keyPress);
 
-    if (instruction->getInputInstruction() == InputInstructionType::NONE) {
+    if (instruction->getType() == InstructionType::NONE) {
         HotkeyPickerMove move = HotkeyPickerMove::NONE;
 
         switch (keyPress) {
@@ -30,9 +30,13 @@ InputInstruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
         }
 
         if (move != HotkeyPickerMove::NONE) {
-            instruction = new MoveInputInstruction(move);
+            instruction = new MoveInstruction(move);
         }
     }
 
     return instruction;
+}
+
+InputMode SelectionInputHandler::getNextMode() {
+    return InputMode::TEXT_FILTER;
 }

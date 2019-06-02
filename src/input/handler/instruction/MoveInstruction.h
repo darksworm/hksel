@@ -1,8 +1,8 @@
 
-#include "InputInstruction.h"
+#include "Instruction.h"
 #include "../../../gui/HotkeyPickerDrawer.h"
 
-class MoveInputInstruction : public InputInstruction {
+class MoveInstruction : public Instruction {
 private:
     HotkeyPickerMove moveDirection;
 public:
@@ -10,6 +10,6 @@ public:
         return this->moveDirection;
     }
 
-    explicit MoveInputInstruction(HotkeyPickerMove moveDirection) : InputInstruction(InputInstructionType::MOVE),
+    explicit MoveInstruction(HotkeyPickerMove moveDirection) : Instruction(InstructionType::MOVE),
                                                                     moveDirection(moveDirection) {}
 };

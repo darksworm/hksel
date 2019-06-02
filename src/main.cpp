@@ -13,10 +13,11 @@
 #include "gui/drawer/ShapeDrawerFactory.h"
 #include "gui/HotkeyPickerDrawer.h"
 #include "input/x11_keycodes.h"
-#include "input/handler/InputState.h"
+#include "input/handler/InputMode.h"
 #include "input/handler/InputHandler.h"
 #include "input/handler/InputHandlerFactory.h"
-#include "input/handler/instruction/MoveInputInstruction.h"
+#include "input/handler/instruction/MoveInstruction.h"
+#include "input/handler/instruction/ModeChangeInstruction.h"
 
 #define CONSUME_KB false
 
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    InputState state = InputState::SELECTION;
+    InputMode state = InputMode::SELECTION;
     int keep_running = 1;
     XEvent event;
 
@@ -101,20 +102,19 @@ int main(int argc, char *argv[]) {
         printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
                keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
-        InputInstruction *instruction = inputHandler->handleKeyPress(keyCode);
+        Instruction *instruction = inputHandler->handleKeyPress(keyCode);
 
-        if (instruction->getInputInstruction() == InputInstructionType::NONE) {
+        if (instruction->getType() == InstructionType::NONE) {
             continue;
         }
 
-        if(instruction->getInputInstruction() == InputInstructionType::EXIT)
-        {
+        if (instruction->getType() == InstructionType::EXIT) {
             keep_running = 0;
             continue;
         }
 
-        if (dynamic_cast<MoveInputInstruction *>(instruction)) {
-            auto move = ((MoveInputInstruction *)(instruction))->getMoveDirection();
+        if (dynamic_cast<MoveInstruction *>(instruction)) {
+            auto move = ((MoveInstruction *) (instruction))->getMoveDirection();
 
             bool moved = false;
 
@@ -127,6 +127,9 @@ int main(int argc, char *argv[]) {
             if (move == HotkeyPickerMove::NONE || !moved) {
                 hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
             }
+        }
+        else if(dynamic_cast<ModeChangeInstruction *>(instruction)) {
+            state = ((ModeChangeInstruction *) (instruction))->getNewMode();
         }
     }
 

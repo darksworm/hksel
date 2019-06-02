@@ -9,3 +9,7 @@ std::string TextFilteringInputHandler::getFilterText() {
 bool TextFilteringInputHandler::isHotkeyVisible(Hotkey hotkey) {
     return false;
 }
+
+InputMode TextFilteringInputHandler::getNextMode() {
+    return InputMode::KEY_FILTER;
+}
