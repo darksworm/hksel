@@ -20,7 +20,32 @@
 #include "input/handler/instruction/ModeChangeInstruction.h"
 
 #define CONSUME_KB false
+#define DEBUG true
 
+
+void drawText(WindowManager *windowManager, std::string text, Dimensions position) {
+    auto display = windowManager->getDisplay();
+    auto window = windowManager->getWindow();
+
+    // TODO: these should be config options
+    int screen_num = DefaultScreen(display);
+
+    GC gc = XCreateGC(display, window, 0, nullptr);
+
+    XSetForeground(display, gc, WhitePixel(display, screen_num));
+    XSetBackground(display, gc, BlackPixel(display, screen_num));
+
+
+    XDrawString(
+            windowManager->getDisplay(),
+            windowManager->getWindow(),
+            gc,
+            (int) position.x,
+            (int) position.y,
+            text.c_str(),
+            (int) text.length()
+    );
+}
 
 int main(int argc, char *argv[]) {
     std::vector<Hotkey> hotkeys;
@@ -127,9 +152,23 @@ int main(int argc, char *argv[]) {
             if (move == HotkeyPickerMove::NONE || !moved) {
                 hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
             }
-        }
-        else if(dynamic_cast<ModeChangeInstruction *>(instruction)) {
+        } else if (dynamic_cast<ModeChangeInstruction *>(instruction)) {
             state = ((ModeChangeInstruction *) (instruction))->getNewMode();
+        }
+
+        if(DEBUG) {
+            XClearArea(
+                    windowManager->getDisplay(),
+                    windowManager->getWindow(),
+                    50,
+                    50,
+                    300,
+                    100,
+                    false
+            );
+
+            static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
+            drawText(windowManager, inputModes[(int) state], Dimensions(100, 100));
         }
     }
 
