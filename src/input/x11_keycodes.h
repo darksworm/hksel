@@ -19,7 +19,7 @@ unsigned x11_keycode_to_libinput_code(KeySym key) {
         static const uint16_t map[] =
                 {KEY_LEFTSHIFT, KEY_LEFTSHIFT,
                  KEY_LEFTCTRL, KEY_LEFTCTRL,
-                 KEY_LEFTSHIFT, KEY_LEFTSHIFT,
+                 KEY_LEFTSHIFT, KEY_CAPSLOCK,
                  0, 0,
                  KEY_LEFTALT, KEY_RIGHTALT,
                  0, 0, 0, 0};
