@@ -7,9 +7,12 @@ class KeyFilteringInputHandler : public FilteringInputHandler {
 public:
     std::string getFilterText() override;
 
-    bool isHotkeyVisible(Hotkey hotkey) override;
+    std::function<bool(Hotkey *)> getFilter() override;
 
     InputMode getNextMode() override;
+
+protected:
+    bool shouldAddToBuffer(unsigned keyPress) override;
 };
 
 

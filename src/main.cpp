@@ -8,22 +8,24 @@
 
 #include "gui/WindowManager.h"
 #include "input/KeyboardManager.h"
-#include "lib/keycode/keycode.h"
+//#include "lib/keycode/keycode.h"
 #include "hotkey/hotkeyloader_yaml.h"
 #include "gui/drawer/ShapeDrawerFactory.h"
 #include "gui/HotkeyPickerDrawer.h"
+
 #include "input/x11_keycodes.h"
 #include "input/handler/InputMode.h"
 #include "input/handler/InputHandler.h"
 #include "input/handler/InputHandlerFactory.h"
 #include "input/handler/instruction/MoveInstruction.h"
 #include "input/handler/instruction/ModeChangeInstruction.h"
+#include "input/handler/instruction/FilterInstruction.h"
 
 #define CONSUME_KB false
 #define DEBUG true
 
 
-void drawText(WindowManager *windowManager, std::string text, Dimensions position) {
+void drawText(WindowManager *windowManager, const std::string &text, Dimensions position) {
     auto display = windowManager->getDisplay();
     auto window = windowManager->getWindow();
 
@@ -35,7 +37,6 @@ void drawText(WindowManager *windowManager, std::string text, Dimensions positio
     XSetForeground(display, gc, WhitePixel(display, screen_num));
     XSetBackground(display, gc, BlackPixel(display, screen_num));
 
-
     XDrawString(
             windowManager->getDisplay(),
             windowManager->getWindow(),
@@ -45,6 +46,8 @@ void drawText(WindowManager *windowManager, std::string text, Dimensions positio
             text.c_str(),
             (int) text.length()
     );
+
+    XFreeGC(display, gc);
 }
 
 int main(int argc, char *argv[]) {
@@ -53,9 +56,10 @@ int main(int argc, char *argv[]) {
     // TODO: config manager?
     load_hotkeys_yaml((char *) "../static/i3.yaml", &hotkeys);
 
-    auto *windowManager = new WindowManager();
-    auto *keyboardManager = new KeyboardManager();
-    auto hotkeyPickerDrawer = new HotkeyPickerDrawer(windowManager, ShapeType::RECTANGLE, &hotkeys);
+    std::unique_ptr<WindowManager> windowManager(new WindowManager());
+    std::unique_ptr<KeyboardManager> keyboardManager(new KeyboardManager());
+    std::unique_ptr<HotkeyPickerDrawer> hotkeyPickerDrawer(
+            new HotkeyPickerDrawer(windowManager.get(), ShapeType::RECTANGLE, &hotkeys));
 
     Display *display = windowManager->getDisplay();
     Window window = windowManager->getWindow();
@@ -72,7 +76,7 @@ int main(int argc, char *argv[]) {
     XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
     hotkeyPickerDrawer->drawFrame(&*hotkeys.begin());
 
-    InputHandler *inputHandler = nullptr;
+    std::unique_ptr<InputHandler> inputHandler(nullptr);
 
     while (keep_running) {
         unsigned keyCode = 0;
@@ -120,14 +124,14 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if (!InputHandlerFactory::isCorrectHandler(inputHandler, state)) {
-            inputHandler = InputHandlerFactory::getInputHandler(state);
+        if (!InputHandlerFactory::isCorrectHandler(inputHandler.get(), state)) {
+            inputHandler.reset(InputHandlerFactory::getInputHandler(state));
         }
 
-        printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
-               keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
+//        printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
+//               keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
-        Instruction *instruction = inputHandler->handleKeyPress(keyCode);
+        std::unique_ptr<Instruction> instruction(inputHandler->handleKeyPress(keyCode));
 
         if (instruction->getType() == InstructionType::NONE) {
             continue;
@@ -138,8 +142,8 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if (dynamic_cast<MoveInstruction *>(instruction)) {
-            auto move = ((MoveInstruction *) (instruction))->getMoveDirection();
+        if (dynamic_cast<MoveInstruction *>(instruction.get())) {
+            auto move = ((MoveInstruction *) (instruction.get()))->getMoveDirection();
 
             bool moved = false;
 
@@ -152,11 +156,19 @@ int main(int argc, char *argv[]) {
             if (move == HotkeyPickerMove::NONE || !moved) {
                 hotkeyPickerDrawer->drawFrame(hotkeyPickerDrawer->getSelectedHotkey());
             }
-        } else if (dynamic_cast<ModeChangeInstruction *>(instruction)) {
-            state = ((ModeChangeInstruction *) (instruction))->getNewMode();
+        } else if (dynamic_cast<ModeChangeInstruction *>(instruction.get())) {
+            state = ((ModeChangeInstruction *) (instruction.get()))->getNewMode();
+
+            hotkeyPickerDrawer->setFilter(nullptr);
+            XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
+            hotkeyPickerDrawer->drawFrame(nullptr);
+        } else if (dynamic_cast<FilterInstruction *>(instruction.get())) {
+            hotkeyPickerDrawer->setFilter(((FilterInstruction *) instruction.get())->getFilter());
+            XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
+            hotkeyPickerDrawer->drawFrame(nullptr);
         }
 
-        if(DEBUG) {
+        if (DEBUG) {
             XClearArea(
                     windowManager->getDisplay(),
                     windowManager->getWindow(),
@@ -168,7 +180,7 @@ int main(int argc, char *argv[]) {
             );
 
             static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
-            drawText(windowManager, inputModes[(int) state], Dimensions(100, 100));
+            drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
         }
     }
 

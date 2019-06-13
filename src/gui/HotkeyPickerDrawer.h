@@ -3,6 +3,8 @@
 #include <X11/Xutil.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
+#include <functional>
+#include <memory>
 
 #include "../hotkey/hotkey.h"
 #include "Shape.h"
@@ -43,6 +45,8 @@ public:
     void drawFrame(Hotkey* selectedHotkey);
 
     bool move(HotkeyPickerMove move);
+
+    void setFilter(std::function<bool(Hotkey *)> filter);
 
     Hotkey* getSelectedHotkey();
 };

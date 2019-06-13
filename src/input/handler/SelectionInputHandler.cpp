@@ -30,6 +30,7 @@ Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
         }
 
         if (move != HotkeyPickerMove::NONE) {
+            delete instruction;
             instruction = new MoveInstruction(move);
         }
     }

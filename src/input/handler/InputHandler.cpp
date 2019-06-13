@@ -5,8 +5,6 @@
 #include "filters/TextFilteringInputHandler.h"
 
 Instruction *InputHandler::handleKeyPress(unsigned keyPress) {
-    // TODO: handle mode switching here
-
     if (keyPress == KEY_ESC) {
         return new Instruction(InstructionType::EXIT);
     }

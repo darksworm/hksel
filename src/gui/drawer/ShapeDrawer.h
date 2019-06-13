@@ -156,4 +156,12 @@ public:
 
         this->windowManager = windowManager;
     }
+
+    ~ShapeDrawer() {
+        delete this->lastShapePosition;
+
+        XFreeGC(this->windowManager->getDisplay(), textGC);
+        XFreeGC(this->windowManager->getDisplay(), selectedShapeGC);
+        XFreeGC(this->windowManager->getDisplay(), shapeGC);
+    }
 };
