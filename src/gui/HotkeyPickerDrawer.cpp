@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "HotkeyPickerDrawer.h"
 #include "../exceptions/OutOfBounds.h"
 #include "dimensions.h"
@@ -27,7 +29,15 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     int drawnShapeCnt = 0;
 
     for (auto it = start; it != hotkeys->end(); ++it) {
-        bool selected = &*it == selectedHotkey;
+        if(filter && !filter(&*it)){
+            continue;
+        }
+
+        if(selectedHotkey == nullptr){
+            selectedHotkey = &*it;
+        }
+
+        bool selected =  &*it == selectedHotkey;
 
         Shape shape{
                 .selected = selected,
@@ -56,7 +66,23 @@ std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
         throw OutOfBounds();
     }
 
-    return hotkeys->begin() + hotkeysPerPage * page;
+    int offset = hotkeysPerPage * page;
+
+//    if(!this->filter) {
+        return hotkeys->begin() + offset;
+//    } else {
+//        int hotkeysFound = 0;
+//
+//        for (auto it = hotkeys->begin(); it != hotkeys->end(); ++it) {
+//            if(filter(&*it)) {
+//                if(++hotkeysFound > offset) {
+//                    return it;
+//                }
+//            }
+//        }
+//
+//        throw OutOfBounds();
+//    }
 }
 
 int HotkeyPickerDrawer::getHotkeyPage(long index) {
@@ -113,4 +139,6 @@ Hotkey *HotkeyPickerDrawer::getSelectedHotkey() {
     return selectedShape->hotkey;
 }
 
-
+void HotkeyPickerDrawer::setFilter(std::function<bool(Hotkey *)> filter) {
+    this->filter = std::move(filter);
+}

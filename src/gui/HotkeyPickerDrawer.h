@@ -39,6 +39,8 @@ private:
 
     void goToHotkey(long hotkeyIdx);
 
+    std::function<bool(Hotkey*)> filter;
+
 public:
     HotkeyPickerDrawer(WindowManager* windowManager, ShapeType shapeType, std::vector<Hotkey> *hotkeys);
 
