@@ -4,6 +4,7 @@
 #include "SelectionInputHandler.h"
 #include "../../gui/HotkeyPickerDrawer.h"
 #include "instruction/MoveInstruction.h"
+#include "instruction/ModeChangeInstruction.h"
 
 Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
     auto instruction = InputHandler::handleKeyPress(keyPress);
@@ -12,6 +13,10 @@ Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
         HotkeyPickerMove move = HotkeyPickerMove::NONE;
 
         switch (keyPress) {
+            case KEY_SLASH:
+                delete instruction;
+                instruction = new ModeChangeInstruction(InputMode::TEXT_FILTER);
+                break;
             case KEY_H:
                 move = HotkeyPickerMove::LEFT;
                 break;
