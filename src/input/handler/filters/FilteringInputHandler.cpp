@@ -7,11 +7,12 @@ Instruction *FilteringInputHandler::handleKeyPress(unsigned keyPress) {
 
     switch (instruction->getType()) {
         case InstructionType::EXIT: {
-            this->buffer.clear();
+            if (!this->buffer.empty()) {
+                this->buffer.clear();
 
-            delete instruction;
-
-            instruction = new Instruction(InstructionType::NONE);
+                delete instruction;
+                instruction = new Instruction(InstructionType::NONE);
+            }
         }
 
         case InstructionType::NONE: {
@@ -25,7 +26,8 @@ Instruction *FilteringInputHandler::handleKeyPress(unsigned keyPress) {
 
             break;
         }
-        default: break;
+        default:
+            break;
     }
 
     return instruction;
