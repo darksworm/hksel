@@ -66,7 +66,7 @@ bool TextFilteringInputHandler::shouldAddToBuffer(unsigned keyPress) {
 }
 
 bool TextFilteringInputHandler::isTextualKey(unsigned keyPress) {
-    return strlen(keycode_linux_rawname(keyPress)) == 1;
+    return keyPress == KEY_SPACE || strlen(keycode_linux_rawname(keyPress)) == 1;
 }
 
 std::string TextFilteringInputHandler::bufferToString() {
