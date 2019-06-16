@@ -2,11 +2,13 @@
 #include <vector>
 #include <cstring>
 #include <algorithm>
+#include <linux/input-event-codes.h>
 #include "TextFilteringInputHandler.h"
 #include "../../../lib/keycode/keycode.h"
+#include "../instruction/FilterInstruction.h"
 
 std::string TextFilteringInputHandler::getFilterText() {
-    return std::__cxx11::string();
+    return this->bufferToString();
 }
 
 InputMode TextFilteringInputHandler::getNextMode() {
@@ -16,33 +18,47 @@ InputMode TextFilteringInputHandler::getNextMode() {
 std::function<bool(Hotkey *)> TextFilteringInputHandler::getFilter() {
     auto bufferString = bufferToString();
 
+    auto upperCase = [](std::string input) {
+        for (char &it : input)
+            it = static_cast<char>(toupper((unsigned char) it));
+        return input;
+    };
+
     /** mom, look at me im using lambdas
      AKA refactor me please */
     return std::function<bool(Hotkey *hotkey)>(
-            [bufferString](Hotkey *hotkey) {
-                auto it = std::search(
-                        hotkey->getDescription().begin(), hotkey->getDescription().end(),
-                        bufferString.begin(), bufferString.end(),
-                        [](char ch1, char ch2) { return std::toupper(ch1) == std::toupper(ch2); }
-                );
+            [bufferString, upperCase](Hotkey *hotkey) {
+                auto str = upperCase(bufferString);
 
-                if (it != hotkey->getDescription().end()) {
+                if (upperCase(hotkey->getDescription()).find(str) != std::string::npos) {
                     return true;
                 }
 
-                it = std::search(
-                        hotkey->getName().begin(), hotkey->getName().end(),
-                        bufferString.begin(), bufferString.end(),
-                        [](char ch1, char ch2) { return std::toupper(ch1) == std::toupper(ch2); }
-                );
-
-                return it != hotkey->getName().end();
+                return upperCase(hotkey->getDescription()).find(str) != std::string::npos;
             }
     );
 }
 
 Instruction *TextFilteringInputHandler::handleKeyPress(unsigned keyPress) {
-    auto instruction = FilteringInputHandler::handleKeyPress(keyPress);
+    switch (keyPress) {
+        case KEY_BACKSPACE: {
+            if (!this->buffer.empty()) {
+                this->buffer.pop_back();
+            }
+
+            return new FilterInstruction(this->getFilter(), this->getFilterText());
+        }
+
+        case KEY_DELETE: {
+            this->buffer.clear();
+
+            return new FilterInstruction(this->getFilter(), this->getFilterText());
+        }
+
+        default:
+            return FilteringInputHandler::handleKeyPress(keyPress);
+    }
+
 }
 
 bool TextFilteringInputHandler::shouldAddToBuffer(unsigned keyPress) {

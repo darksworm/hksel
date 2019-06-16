@@ -163,25 +163,41 @@ int main(int argc, char *argv[]) {
             XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
             hotkeyPickerDrawer->drawFrame(nullptr);
         } else if (dynamic_cast<FilterInstruction *>(instruction.get())) {
-            hotkeyPickerDrawer->setFilter(((FilterInstruction *) instruction.get())->getFilter());
+            auto filterInstruction = ((FilterInstruction *) instruction.get());
+
+            hotkeyPickerDrawer->setFilter(filterInstruction->getFilter());
             XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
             hotkeyPickerDrawer->drawFrame(nullptr);
-        }
 
-        if (DEBUG) {
+#if DEBUG
             XClearArea(
                     windowManager->getDisplay(),
                     windowManager->getWindow(),
-                    50,
+                    500,
                     50,
                     300,
                     100,
                     false
             );
 
-            static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
-            drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
+            drawText(windowManager.get(), "QUERY: " + filterInstruction->getFilterString(), Dimensions(500, 100));
+#endif
         }
+
+#if DEBUG
+        XClearArea(
+                windowManager->getDisplay(),
+                windowManager->getWindow(),
+                50,
+                50,
+                300,
+                100,
+                false
+        );
+
+        static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
+        drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
+#endif
     }
 
     if (CONSUME_KB) {
