@@ -68,6 +68,8 @@ std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
 
     int offset = hotkeysPerPage * page;
 
+// TODO: what's the deal with this?
+//
 //    if(!this->filter) {
         return hotkeys->begin() + offset;
 //    } else {

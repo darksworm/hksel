@@ -33,7 +33,12 @@ static void load_hotkeys_yaml(char *yaml_file_path, std::vector<Hotkey> *hotkeys
 
         // TODO: verify that the defined keys are valid
 
-        hotkeys->push_back(Hotkey(keys_str, tags, description, name));
+        std::unordered_set<std::string> keys_set;
+        for(auto &key : keys_str) {
+            keys_set.insert(key);
+        }
+
+        hotkeys->push_back(Hotkey(keys_set, tags, description, name));
     }
 
     std::cout << hotkeys->capacity();

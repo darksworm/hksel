@@ -8,7 +8,7 @@
 
 #include "gui/WindowManager.h"
 #include "input/KeyboardManager.h"
-//#include "lib/keycode/keycode.h"
+#include "lib/keycode/keycode.h"
 #include "hotkey/hotkeyloader_yaml.h"
 #include "gui/drawer/ShapeDrawerFactory.h"
 #include "gui/HotkeyPickerDrawer.h"
@@ -128,8 +128,8 @@ int main(int argc, char *argv[]) {
             inputHandler.reset(InputHandlerFactory::getInputHandler(state));
         }
 
-//        printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
-//               keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
+        printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
+               keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
         std::unique_ptr<Instruction> instruction(inputHandler->handleKeyPress(keyCode));
 
