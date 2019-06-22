@@ -11,7 +11,7 @@ Instruction *FilteringInputHandler::handleKeyPress(unsigned keyPress) {
                 this->buffer.clear();
 
                 delete instruction;
-                instruction = new Instruction(InstructionType::NONE);
+                instruction = new FilterInstruction(this->getFilter(), this->getFilterText());
             }
         }
 
