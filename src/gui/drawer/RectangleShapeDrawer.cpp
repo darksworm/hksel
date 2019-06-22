@@ -16,6 +16,10 @@ Shape RectangleShapeDrawer::drawNextShape(ShapeProperties shapeProperties, Dimen
 
     drawText(shapeProperties, shape);
 
+//    if(lastShapePosition != nullptr) {
+//        delete lastShapePosition;
+//    }
+
     lastShapePosition = pos;
     return shape;
 }

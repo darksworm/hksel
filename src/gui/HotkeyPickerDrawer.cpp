@@ -1,6 +1,9 @@
+#include <utility>
+
 #include "HotkeyPickerDrawer.h"
 #include "../exceptions/OutOfBounds.h"
 #include "dimensions.h"
+#include <memory>
 
 HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType shapeType,
                                        std::vector<Hotkey> *hotkeys) {
@@ -13,23 +16,28 @@ HotkeyPickerDrawer::HotkeyPickerDrawer(WindowManager *windowManager, ShapeType s
     shapeProperties = shapeDrawer->calcShapeProps(windowManager->getWindow());
 }
 
-// TODO: move this somewhere else?
-
-
 void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     auto start = getPageHotkeyStart();
 
     shapes.clear();
     shapeDrawer->lastShapePosition = nullptr;
 
-    auto windowDimensions = new Dimensions;
+    std::unique_ptr<Dimensions> windowDimensions(new Dimensions);
     windowManager->getWindowDimensions(&windowDimensions->x, &windowDimensions->y);
 
     int shapeCnt = shapeProperties.itemCounts.x * shapeProperties.itemCounts.y;
     int drawnShapeCnt = 0;
 
     for (auto it = start; it != hotkeys->end(); ++it) {
-        bool selected = &*it == selectedHotkey;
+        if(filter && !filter(&*it)){
+            continue;
+        }
+
+        if(selectedHotkey == nullptr){
+            selectedHotkey = &*it;
+        }
+
+        bool selected =  &*it == selectedHotkey;
 
         Shape shape{
                 .selected = selected,
@@ -58,7 +66,25 @@ std::vector<Hotkey>::iterator HotkeyPickerDrawer::getPageHotkeyStart() {
         throw OutOfBounds();
     }
 
-    return hotkeys->begin() + hotkeysPerPage * page;
+    int offset = hotkeysPerPage * page;
+
+// TODO: what's the deal with this?
+//
+//    if(!this->filter) {
+        return hotkeys->begin() + offset;
+//    } else {
+//        int hotkeysFound = 0;
+//
+//        for (auto it = hotkeys->begin(); it != hotkeys->end(); ++it) {
+//            if(filter(&*it)) {
+//                if(++hotkeysFound > offset) {
+//                    return it;
+//                }
+//            }
+//        }
+//
+//        throw OutOfBounds();
+//    }
 }
 
 int HotkeyPickerDrawer::getHotkeyPage(long index) {
@@ -79,22 +105,22 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
     char *debug;
 
     switch (move) {
-        case LEFT:
+        case HotkeyPickerMove::LEFT:
             canMove = selectedShape->index >= 1;
             newSelectedShapeIdx = selectedShape->index - 1;
             debug = "LEFT";
             break;
-        case RIGHT:
+        case HotkeyPickerMove::RIGHT:
             canMove = selectedShape->index + 1 < hotkeys->size();
             newSelectedShapeIdx = selectedShape->index + 1;
             debug = "RIGHT";
             break;
-        case UP:
+        case HotkeyPickerMove::UP:
             canMove = selectedShape->index - shapeProperties.itemCounts.x >= 0;
             newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x;
             debug = "UP";
             break;
-        case DOWN:
+        case HotkeyPickerMove::DOWN:
             canMove = selectedShape->index + shapeProperties.itemCounts.x < hotkeys->size();
             newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x;
             debug = "DOWN";
@@ -115,4 +141,6 @@ Hotkey *HotkeyPickerDrawer::getSelectedHotkey() {
     return selectedShape->hotkey;
 }
 
-
+void HotkeyPickerDrawer::setFilter(std::function<bool(Hotkey *)> filter) {
+    this->filter = std::move(filter);
+}

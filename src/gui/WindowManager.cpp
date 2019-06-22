@@ -60,6 +60,7 @@ Screen* WindowManager::getScreen() {
 }
 
 void WindowManager::newWindow() {
+    // TODO: handle multiple screens?
     Screen* screen = this->getScreen();
 
     int height = screen->height;
