@@ -36,9 +36,25 @@ Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
 
         if (move != HotkeyPickerMove::NONE) {
             delete instruction;
-            instruction = new MoveInstruction(move);
+            instruction = new MoveInstruction(move, repeatNextCommandTimes);
         }
     }
+
+    if (keyPress == KEY_0 && repeatNextCommand) {
+        repeatNextCommandTimes = repeatNextCommandTimes * 10;
+    } else if (keyPress >= KEY_1 && keyPress <= KEY_9) {
+        if (repeatNextCommand) {
+            repeatNextCommandTimes = repeatNextCommandTimes * 10 + (keyPress - 1);
+        } else {
+            repeatNextCommandTimes = keyPress - 1;
+        }
+
+        repeatNextCommand = true;
+    } else {
+        repeatNextCommandTimes = 1;
+        repeatNextCommand = false;
+    }
+
 
     return instruction;
 }

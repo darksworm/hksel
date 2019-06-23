@@ -98,7 +98,7 @@ void HotkeyPickerDrawer::goToHotkey(long hotkeyIdx) {
     drawFrame(hotkey);
 }
 
-bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
+bool HotkeyPickerDrawer::move(HotkeyPickerMove move, unsigned int steps) {
     bool canMove = false;
     long newSelectedShapeIdx = 0;
 
@@ -106,23 +106,23 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move) {
 
     switch (move) {
         case HotkeyPickerMove::LEFT:
-            canMove = selectedShape->index >= 1;
-            newSelectedShapeIdx = selectedShape->index - 1;
+            canMove = selectedShape->index >= steps;
+            newSelectedShapeIdx = selectedShape->index - steps;
             debug = "LEFT";
             break;
         case HotkeyPickerMove::RIGHT:
-            canMove = selectedShape->index + 1 < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + 1;
+            canMove = selectedShape->index + steps < hotkeys->size();
+            newSelectedShapeIdx = selectedShape->index + steps;
             debug = "RIGHT";
             break;
         case HotkeyPickerMove::UP:
-            canMove = selectedShape->index - shapeProperties.itemCounts.x >= 0;
-            newSelectedShapeIdx = selectedShape->index - shapeProperties.itemCounts.x;
+            canMove = selectedShape->index - (steps * shapeProperties.itemCounts.x) >= 0;
+            newSelectedShapeIdx = selectedShape->index - (steps * shapeProperties.itemCounts.x);
             debug = "UP";
             break;
         case HotkeyPickerMove::DOWN:
-            canMove = selectedShape->index + shapeProperties.itemCounts.x < hotkeys->size();
-            newSelectedShapeIdx = selectedShape->index + shapeProperties.itemCounts.x;
+            canMove = selectedShape->index + (steps * shapeProperties.itemCounts.x) < hotkeys->size();
+            newSelectedShapeIdx = selectedShape->index + (steps * shapeProperties.itemCounts.x);
             debug = "DOWN";
             break;
     }

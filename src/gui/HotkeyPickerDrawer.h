@@ -46,7 +46,7 @@ public:
 
     void drawFrame(Hotkey* selectedHotkey);
 
-    bool move(HotkeyPickerMove move);
+    bool move(HotkeyPickerMove move, unsigned int steps = 1);
 
     void setFilter(std::function<bool(Hotkey *)> filter);
 

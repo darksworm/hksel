@@ -143,14 +143,15 @@ int main(int argc, char *argv[]) {
         }
 
         if (dynamic_cast<MoveInstruction *>(instruction.get())) {
-            auto move = ((MoveInstruction *) (instruction.get()))->getMoveDirection();
+            auto moveInstruction = ((MoveInstruction *) instruction.get());
+            auto move = moveInstruction->getMoveDirection();
 
             bool moved = false;
 
             XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
 
             if (move != HotkeyPickerMove::NONE) {
-                moved = hotkeyPickerDrawer->move(move);
+                moved = hotkeyPickerDrawer->move(moveInstruction->getMoveDirection(), moveInstruction->getMoveSteps());
             }
 
             if (move == HotkeyPickerMove::NONE || !moved) {
