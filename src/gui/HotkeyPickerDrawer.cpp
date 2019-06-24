@@ -130,6 +130,15 @@ bool HotkeyPickerDrawer::move(HotkeyPickerMove move, unsigned int steps) {
             newSelectedShapeIdx = hotkeys->size() - 1;
             debug = "END";
             break;
+        case HotkeyPickerMove::HOME:
+            canMove = true;
+            newSelectedShapeIdx = 0;
+            debug = "HOME";
+            break;
+        case HotkeyPickerMove::LINE:
+            canMove = steps > 0 && shapeProperties.itemCounts.x * steps < hotkeys->size();
+            newSelectedShapeIdx = shapeProperties.itemCounts.x * (steps - 1);
+            debug = "LINE";
     }
 
     printf("type: %s, canmove: %d oldIdx: %d newIdx: %d \n", debug, canMove, selectedShape->index,

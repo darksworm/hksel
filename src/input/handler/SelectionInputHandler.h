@@ -5,7 +5,7 @@
 
 class SelectionInputHandler : public InputHandler {
 public:
-    Instruction *handleKeyPress(unsigned keyPress) override;
+    Instruction *handleKeyPress(unsigned keyCode) override;
 
     InputMode getNextMode() override;
 private:
