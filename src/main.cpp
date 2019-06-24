@@ -73,10 +73,12 @@ int main(int argc, char *argv[]) {
     int keep_running = 1;
     XEvent event;
 
-    XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
+    XSelectInput(display, window, ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | StructureNotifyMask);
     hotkeyPickerDrawer->drawFrame(&*hotkeys.begin());
 
     std::unique_ptr<InputHandler> inputHandler(nullptr);
+
+    unsigned eventType;
 
     while (keep_running) {
         unsigned keyCode = 0;
@@ -95,9 +97,18 @@ int main(int argc, char *argv[]) {
                     if (CONSUME_KB) {
                         break;
                     }
+                    eventType = KeyPress;
                     keyCode = x11_keycode_to_libinput_code(XLookupKeysym(&event.xkey, 0));
                     break;
                 }
+
+                case KeyRelease:
+                    if (CONSUME_KB) {
+                        break;
+                    }
+                    eventType = KeyRelease;
+                    keyCode = x11_keycode_to_libinput_code(XLookupKeysym(&event.xkey, 0));
+                    break;
 
                 case ConfigureNotify:
                     XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
@@ -131,7 +142,13 @@ int main(int argc, char *argv[]) {
         printf("RAW: %s FORMATTED: %s %u\n", keycode_linux_rawname(keyCode),
                keycode_linux_name(keycode_linux_to_hid(keyCode)), keyCode);
 
-        std::unique_ptr<Instruction> instruction(inputHandler->handleKeyPress(keyCode));
+        std::unique_ptr<Instruction> instruction;
+
+        if (eventType == KeyPress) {
+            instruction = std::unique_ptr<Instruction>(inputHandler->handleKeyPress(keyCode));
+        } else {
+            instruction = std::unique_ptr<Instruction>(inputHandler->handleKeyRelease(keyCode));
+        }
 
         if (instruction->getType() == InstructionType::NONE) {
             continue;

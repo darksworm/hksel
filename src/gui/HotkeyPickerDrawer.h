@@ -17,7 +17,10 @@ enum class HotkeyPickerMove {
     LEFT,
     RIGHT,
     UP,
-    DOWN
+    DOWN,
+
+    HOME,
+    END
 };
 
 class HotkeyPickerDrawer {

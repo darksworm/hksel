@@ -55,6 +55,14 @@ Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
         repeatNextCommand = false;
     }
 
+    if(keyPress == KEY_G && isModifierActive("SHIFT"))
+    {
+        repeatNextCommand = false;
+        repeatNextCommandTimes = 1;
+
+        delete instruction;
+        instruction = new MoveInstruction(HotkeyPickerMove::END, 1);
+    }
 
     return instruction;
 }
