@@ -32,7 +32,7 @@ Instruction *InputHandler::handleKeyRelease(unsigned keyCode) {
 }
 
 void InputHandler::removeModifier(unsigned keyCode) {
-    activeModifiers.erase(keyCodeToYAMLName(keyCode));
+    activeModifiers.erase(linux_keycode_to_yaml_name(keyCode));
 }
 
 bool InputHandler::isModifier(unsigned keyCode) {
@@ -46,27 +46,9 @@ bool InputHandler::isModifier(unsigned keyCode) {
 }
 
 void InputHandler::addModifier(unsigned keyCode) {
-    activeModifiers.insert(keyCodeToYAMLName(keyCode));
+    activeModifiers.insert(linux_keycode_to_yaml_name(keyCode));
 }
 
 bool InputHandler::isModifierActive(std::string keyName) {
     return activeModifiers.find(keyName) != activeModifiers.end();
-}
-
-/* TODO : this should be moved to another service or something as it is
- * a duplicate of linux_rawname_to_yaml_name defined in KeyFilteringInputHandler */
-std::string InputHandler::keyCodeToYAMLName(unsigned keyCode) {
-    std::string linux_rawname = keycode_linux_rawname(keyCode);
-
-    if (linux_rawname.rfind("LEFT", 0) == 0) {
-        linux_rawname = linux_rawname.substr(4, std::string::npos);
-    } else if (linux_rawname.rfind("RIGHT", 0) == 0) {
-        linux_rawname = linux_rawname.substr(5, std::string::npos);
-    }
-
-    if (linux_rawname == "CTRL") {
-        linux_rawname = "CONTROL";
-    }
-
-    return linux_rawname;
 }

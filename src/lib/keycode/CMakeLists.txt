@@ -12,7 +12,7 @@ add_library(keycode SHARED
         depp-keycode/src/linux_name.c
         depp-keycode/src/linux_rawname.c
         depp-keycode/src/linux_tohid.c
-        )
+        keycode.cpp)
 
 install(TARGETS keycode
         EXPORT keycode-targets
@@ -22,4 +22,4 @@ install(TARGETS keycode
 install(EXPORT keycode-targets
         DESTINATION lib/keycode)
 
-set_target_properties(keycode PROPERTIES PUBLIC_HEADER depp-keycode/src/keycode.h)
+set_target_properties(keycode PROPERTIES PUBLIC_HEADER keycode.h)
