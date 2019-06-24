@@ -17,7 +17,12 @@ enum class HotkeyPickerMove {
     LEFT,
     RIGHT,
     UP,
-    DOWN
+    DOWN,
+
+    HOME,
+    END,
+
+    LINE
 };
 
 class HotkeyPickerDrawer {
@@ -46,7 +51,7 @@ public:
 
     void drawFrame(Hotkey* selectedHotkey);
 
-    bool move(HotkeyPickerMove move);
+    bool move(HotkeyPickerMove move, unsigned int steps = 1);
 
     void setFilter(std::function<bool(Hotkey *)> filter);
 

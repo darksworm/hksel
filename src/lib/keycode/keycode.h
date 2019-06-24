@@ -1,7 +1,5 @@
-#ifndef DEPP_KEYCODE_LIB
-
 #include "depp-keycode/src/keytable.h"
 
-#define DEPP_KEYCODE_LIB true
+std::string linux_rawname_to_yaml_name(std::string linux_rawname);
 
-#endif
+std::string linux_keycode_to_yaml_name(unsigned linux_keycode);

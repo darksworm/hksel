@@ -6,13 +6,13 @@
 #include "instruction/MoveInstruction.h"
 #include "instruction/ModeChangeInstruction.h"
 
-Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
-    auto instruction = InputHandler::handleKeyPress(keyPress);
+Instruction *SelectionInputHandler::handleKeyPress(unsigned keyCode) {
+    auto instruction = InputHandler::handleKeyPress(keyCode);
 
     if (instruction->getType() == InstructionType::NONE) {
         HotkeyPickerMove move = HotkeyPickerMove::NONE;
 
-        switch (keyPress) {
+        switch (keyCode) {
             case KEY_SLASH:
                 delete instruction;
                 instruction = new ModeChangeInstruction(InputMode::TEXT_FILTER);
@@ -36,8 +36,42 @@ Instruction *SelectionInputHandler::handleKeyPress(unsigned keyPress) {
 
         if (move != HotkeyPickerMove::NONE) {
             delete instruction;
-            instruction = new MoveInstruction(move);
+            instruction = new MoveInstruction(move, repeatNextCommandTimes);
         }
+    }
+
+    if (keyCode == KEY_0 && repeatNextCommand) {
+        repeatNextCommandTimes = repeatNextCommandTimes * 10;
+    } else if (keyCode >= KEY_1 && keyCode <= KEY_9) {
+        if (repeatNextCommand) {
+            repeatNextCommandTimes = repeatNextCommandTimes * 10 + (keyCode - 1);
+        } else {
+            repeatNextCommandTimes = keyCode - 1;
+        }
+
+        repeatNextCommand = true;
+    } else if (!isModifier(keyCode) && keyCode != KEY_G) {
+        repeatNextCommandTimes = 1;
+        repeatNextCommand = false;
+    }
+
+    if (keyCode == KEY_G) {
+        delete instruction;
+
+        if (isModifierActive("SHIFT")) {
+            if (repeatNextCommand) {
+                unsigned targetLine = repeatNextCommandTimes;
+                instruction = new MoveInstruction(HotkeyPickerMove::LINE, targetLine);
+            } else {
+                instruction = new MoveInstruction(HotkeyPickerMove::END, 1);
+            }
+
+        } else {
+            instruction = new MoveInstruction(HotkeyPickerMove::HOME, 1);
+        }
+
+        repeatNextCommand = false;
+        repeatNextCommandTimes = 1;
     }
 
     return instruction;
