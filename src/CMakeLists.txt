@@ -9,8 +9,10 @@ add_subdirectory(lib/keycode)
 
 FIND_PACKAGE(X11)
 FIND_LIBRARY(YAML_LIB yaml-cpp)
+find_library(XTST_LIBRARY Xtst)
 
 target_link_libraries(${PROJECT_NAME} ${X11_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${XTST_LIBRARY})
 target_link_libraries(${PROJECT_NAME} stdc++fs)
 target_link_libraries(${PROJECT_NAME} ${YAML_LIB})
 target_link_libraries(${PROJECT_NAME} keycode)

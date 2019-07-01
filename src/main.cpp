@@ -5,6 +5,7 @@
 #include <yaml-cpp/yaml.h>
 #include <thread>
 #include <termcap.h>
+#include <X11/extensions/XTest.h>
 
 #include "gui/WindowManager.h"
 #include "input/KeyboardManager.h"
@@ -63,6 +64,9 @@ int main(int argc, char *argv[]) {
 
     Display *display = windowManager->getDisplay();
     Window window = windowManager->getWindow();
+
+    XKeyboardState initKBState;
+    XGetKeyboardControl(display, &initKBState);
 
     if (CONSUME_KB && !keyboardManager->openKeyboard()) {
         printf("Couldn't open keyboard");
@@ -221,6 +225,23 @@ int main(int argc, char *argv[]) {
     if (CONSUME_KB) {
         keyboardManager->closeKeyboard();
     }
+
+    XKeyboardState exitKBState;
+    XGetKeyboardControl(display, &exitKBState);
+
+    if(exitKBState.led_mask & 1 != initKBState.led_mask & 1)
+    {
+        auto capsKeycode = XKeysymToKeycode(display, XK_Caps_Lock);
+
+        // Simulate Press
+        XTestFakeKeyEvent(display, capsKeycode, True, CurrentTime);
+        XFlush(display);
+
+        // Simulate Release
+        XTestFakeKeyEvent(display, capsKeycode, False, CurrentTime);
+        XFlush(display);
+    }
+
     windowManager->destroyWindow();
 
     return 0;
