@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
     std::unique_ptr<InputHandler> inputHandler(nullptr);
 
-    unsigned eventType;
+    unsigned eventType = 0;
 
     while (keep_running) {
         unsigned keyCode = 0;
