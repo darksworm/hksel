@@ -1,7 +1,7 @@
 We should be able to search for a hotkey in a specific application by
 tags, text and keys themselves.
 
-See [sampleconfig.yaml](../static/sampleconfig.yaml) for how a hotkey
+See [sampleconfig.yaml](../static/conf.d/sampleconfig.yaml) for how a hotkey
 list might look
 
 1.  Config files should have separate indexes.

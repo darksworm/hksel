@@ -1,0 +1,886 @@
+app_name: i3wm
+hotkeys:
+- description: border none
+  keys:
+  - META
+  - U
+  name: META+u
+  tags:
+  - border
+  - none
+- description: border pixel 1
+  keys:
+  - META
+  - Y
+  name: META+y
+  tags:
+  - border
+  - pixel
+  - '1'
+- description: border normal
+  keys:
+  - META
+  - N
+  name: META+n
+  tags:
+  - border
+  - normal
+- description: exec terminator
+  keys:
+  - META
+  - RETURN
+  name: META+Return
+  tags:
+  - exec
+  - terminator
+- description: exec chromium
+  keys:
+  - META
+  - C
+  name: META+c
+  tags:
+  - exec
+  - chromium
+- description: exec playerctl pause && ~/.install/bin/blurlocklog || ~/.install/bin/blurlocklog
+  keys:
+  - META
+  - F12
+  name: META+F12
+  tags:
+  - exec
+  - playerctl
+  - pause
+  - '&&'
+  - ~/.install/bin/blurlocklog
+  - '||'
+  - ~/.install/bin/blurlocklog
+- description: kill
+  keys:
+  - META
+  - SHIFT
+  - Q
+  name: META+SHIFT+q
+  tags:
+  - kill
+- description: exec dmenu_recency
+  keys:
+  - META
+  - D
+  name: META+d
+  tags:
+  - exec
+  - dmenu_recency
+- description: exec pavucontrol
+  keys:
+  - META
+  - CONTROL
+  - M
+  name: META+CONTROL+m
+  tags:
+  - exec
+  - pavucontrol
+- description: exec ranger
+  keys:
+  - META
+  - F3
+  name: META+F3
+  tags:
+  - exec
+  - ranger
+- description: exec gksu pcmanfm
+  keys:
+  - META
+  - SHIFT
+  - F3
+  name: META+SHIFT+F3
+  tags:
+  - exec
+  - gksu
+  - pcmanfm
+- description: exec terminal -e 'mocp'
+  keys:
+  - META
+  - F5
+  name: META+F5
+  tags:
+  - exec
+  - terminal
+  - -e
+  - '''mocp'''
+- description: exec "killall dunst; exec notify-send 'restart dunst'"
+  keys:
+  - META
+  - SHIFT
+  - D
+  name: META+SHIFT+d
+  tags:
+  - exec
+  - '"killall'
+  - dunst;
+  - exec
+  - notify-send
+  - '''restart'
+  - dunst'"
+- description: exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
+  keys:
+  - META
+  - SHIFT
+  - H
+  name: META+SHIFT+h
+  tags:
+  - exec
+  - xdg-open
+  - /usr/share/doc/manjaro/i3_help.pdf
+- description: exec xkill
+  keys:
+  - META
+  - CONTROL
+  - X
+  name: META+CONTROL+x
+  tags:
+  - exec
+  - xkill
+- description: focus left
+  keys:
+  - META
+  - LEFT
+  name: META+Left
+  tags:
+  - focus
+  - left
+- description: focus down
+  keys:
+  - META
+  - DOWN
+  name: META+Down
+  tags:
+  - focus
+  - down
+- description: focus up
+  keys:
+  - META
+  - UP
+  name: META+Up
+  tags:
+  - focus
+  - up
+- description: focus right
+  keys:
+  - META
+  - RIGHT
+  name: META+Right
+  tags:
+  - focus
+  - right
+- description: focus left
+  keys:
+  - META
+  - H
+  name: META+h
+  tags:
+  - focus
+  - left
+- description: focus down
+  keys:
+  - META
+  - J
+  name: META+j
+  tags:
+  - focus
+  - down
+- description: focus up
+  keys:
+  - META
+  - K
+  name: META+k
+  tags:
+  - focus
+  - up
+- description: focus right
+  keys:
+  - META
+  - L
+  name: META+l
+  tags:
+  - focus
+  - right
+- description: move left
+  keys:
+  - META
+  - SHIFT
+  - J
+  name: META+SHIFT+j
+  tags:
+  - move
+  - left
+- description: move down
+  keys:
+  - META
+  - SHIFT
+  - K
+  name: META+SHIFT+k
+  tags:
+  - move
+  - down
+- description: move up
+  keys:
+  - META
+  - SHIFT
+  - L
+  name: META+SHIFT+l
+  tags:
+  - move
+  - up
+- description: move right
+  keys:
+  - META
+  - SHIFT
+  - SEMICOLON
+  name: META+SHIFT+semicolon
+  tags:
+  - move
+  - right
+- description: move left
+  keys:
+  - META
+  - SHIFT
+  - LEFT
+  name: META+SHIFT+Left
+  tags:
+  - move
+  - left
+- description: move down
+  keys:
+  - META
+  - SHIFT
+  - DOWN
+  name: META+SHIFT+Down
+  tags:
+  - move
+  - down
+- description: move up
+  keys:
+  - META
+  - SHIFT
+  - UP
+  name: META+SHIFT+Up
+  tags:
+  - move
+  - up
+- description: move right
+  keys:
+  - META
+  - SHIFT
+  - RIGHT
+  name: META+SHIFT+Right
+  tags:
+  - move
+  - right
+- description: workspace back_and_forth
+  keys:
+  - META
+  - B
+  name: META+b
+  tags:
+  - workspace
+  - back_and_forth
+- description: move container to workspace back_and_forth; workspace back_and_forth
+  keys:
+  - META
+  - SHIFT
+  - B
+  name: META+SHIFT+b
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - back_and_forth;
+  - workspace
+  - back_and_forth
+- description: split v;exec notify-send 'tile vertically'
+  keys:
+  - META
+  - V
+  name: META+v
+  tags:
+  - split
+  - v;exec
+  - notify-send
+  - '''tile'
+  - vertically'
+- description: split toggle
+  keys:
+  - META
+  - Q
+  name: META+q
+  tags:
+  - split
+  - toggle
+- description: fullscreen toggle
+  keys:
+  - META
+  - F
+  name: META+f
+  tags:
+  - fullscreen
+  - toggle
+- description: layout stacking
+  keys:
+  - META
+  - S
+  name: META+s
+  tags:
+  - layout
+  - stacking
+- description: layout tabbed
+  keys:
+  - META
+  - W
+  name: META+w
+  tags:
+  - layout
+  - tabbed
+- description: layout toggle split
+  keys:
+  - META
+  - E
+  name: META+e
+  tags:
+  - layout
+  - toggle
+  - split
+- description: floating toggle
+  keys:
+  - META
+  - SHIFT
+  - SPACE
+  name: META+SHIFT+space
+  tags:
+  - floating
+  - toggle
+- description: focus mode_toggle
+  keys:
+  - META
+  - SPACE
+  name: META+space
+  tags:
+  - focus
+  - mode_toggle
+- description: sticky toggle
+  keys:
+  - META
+  - SHIFT
+  - S
+  name: META+SHIFT+s
+  tags:
+  - sticky
+  - toggle
+- description: focus parent
+  keys:
+  - META
+  - A
+  name: META+a
+  tags:
+  - focus
+  - parent
+- description: move scratchpad
+  keys:
+  - META
+  - SHIFT
+  - MINUS
+  name: META+SHIFT+minus
+  tags:
+  - move
+  - scratchpad
+- description: scratchpad show
+  keys:
+  - META
+  - MINUS
+  name: META+minus
+  tags:
+  - scratchpad
+  - show
+- description: workspace next
+  keys:
+  - META
+  - CONTROL
+  - RIGHT
+  name: META+CONTROL+Right
+  tags:
+  - workspace
+  - next
+- description: workspace prev
+  keys:
+  - META
+  - CONTROL
+  - LEFT
+  name: META+CONTROL+Left
+  tags:
+  - workspace
+  - prev
+- description: workspace $ws1
+  keys:
+  - META
+  - '1'
+  name: META+1
+  tags:
+  - workspace
+  - $ws1
+- description: workspace $ws2
+  keys:
+  - META
+  - '2'
+  name: META+2
+  tags:
+  - workspace
+  - $ws2
+- description: workspace $ws3
+  keys:
+  - META
+  - '3'
+  name: META+3
+  tags:
+  - workspace
+  - $ws3
+- description: workspace $ws4
+  keys:
+  - META
+  - '4'
+  name: META+4
+  tags:
+  - workspace
+  - $ws4
+- description: workspace $ws5
+  keys:
+  - META
+  - '5'
+  name: META+5
+  tags:
+  - workspace
+  - $ws5
+- description: workspace $ws6
+  keys:
+  - META
+  - '6'
+  name: META+6
+  tags:
+  - workspace
+  - $ws6
+- description: workspace $ws7
+  keys:
+  - META
+  - '7'
+  name: META+7
+  tags:
+  - workspace
+  - $ws7
+- description: workspace $ws8
+  keys:
+  - META
+  - '8'
+  name: META+8
+  tags:
+  - workspace
+  - $ws8
+- description: workspace $ws9
+  keys:
+  - META
+  - '9'
+  name: META+9
+  tags:
+  - workspace
+  - $ws9
+- description: move container to workspace $ws1
+  keys:
+  - META
+  - CONTROL
+  - '1'
+  name: META+CONTROL+1
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws1
+- description: move container to workspace $ws2
+  keys:
+  - META
+  - CONTROL
+  - '2'
+  name: META+CONTROL+2
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws2
+- description: move container to workspace $ws3
+  keys:
+  - META
+  - CONTROL
+  - '3'
+  name: META+CONTROL+3
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws3
+- description: move container to workspace $ws4
+  keys:
+  - META
+  - CONTROL
+  - '4'
+  name: META+CONTROL+4
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws4
+- description: move container to workspace $ws5
+  keys:
+  - META
+  - CONTROL
+  - '5'
+  name: META+CONTROL+5
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws5
+- description: move container to workspace $ws6
+  keys:
+  - META
+  - CONTROL
+  - '6'
+  name: META+CONTROL+6
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws6
+- description: move container to workspace $ws7
+  keys:
+  - META
+  - CONTROL
+  - '7'
+  name: META+CONTROL+7
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws7
+- description: move container to workspace $ws8
+  keys:
+  - META
+  - CONTROL
+  - '8'
+  name: META+CONTROL+8
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws8
+- description: move container to workspace $ws1; workspace $ws1
+  keys:
+  - META
+  - SHIFT
+  - '1'
+  name: META+SHIFT+1
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws1;
+  - workspace
+  - $ws1
+- description: move container to workspace $ws2; workspace $ws2
+  keys:
+  - META
+  - SHIFT
+  - '2'
+  name: META+SHIFT+2
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws2;
+  - workspace
+  - $ws2
+- description: move container to workspace $ws3; workspace $ws3
+  keys:
+  - META
+  - SHIFT
+  - '3'
+  name: META+SHIFT+3
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws3;
+  - workspace
+  - $ws3
+- description: move container to workspace $ws4; workspace $ws4
+  keys:
+  - META
+  - SHIFT
+  - '4'
+  name: META+SHIFT+4
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws4;
+  - workspace
+  - $ws4
+- description: move container to workspace $ws5; workspace $ws5
+  keys:
+  - META
+  - SHIFT
+  - '5'
+  name: META+SHIFT+5
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws5;
+  - workspace
+  - $ws5
+- description: move container to workspace $ws6; workspace $ws6
+  keys:
+  - META
+  - SHIFT
+  - '6'
+  name: META+SHIFT+6
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws6;
+  - workspace
+  - $ws6
+- description: move container to workspace $ws7; workspace $ws7
+  keys:
+  - META
+  - SHIFT
+  - '7'
+  name: META+SHIFT+7
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws7;
+  - workspace
+  - $ws7
+- description: move container to workspace $ws8; workspace $ws8
+  keys:
+  - META
+  - SHIFT
+  - '8'
+  name: META+SHIFT+8
+  tags:
+  - move
+  - container
+  - to
+  - workspace
+  - $ws8;
+  - workspace
+  - $ws8
+- description: reload
+  keys:
+  - META
+  - SHIFT
+  - C
+  name: META+SHIFT+c
+  tags:
+  - reload
+- description: restart
+  keys:
+  - META
+  - SHIFT
+  - R
+  name: META+SHIFT+r
+  tags:
+  - restart
+- description: exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you
+    really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg
+    exit'"
+  keys:
+  - META
+  - SHIFT
+  - E
+  name: META+SHIFT+e
+  tags:
+  - exec
+  - '"i3-nagbar'
+  - -t
+  - warning
+  - -m
+  - '''You'
+  - pressed
+  - the
+  - exit
+  - shortcut.
+  - Do
+  - you
+  - really
+  - want
+  - to
+  - exit
+  - i3?
+  - This
+  - will
+  - end
+  - your
+  - X
+  - session.'
+  - -b
+  - '''Yes,'
+  - exit
+  - i3'
+  - '''i3-msg'
+  - exit'"
+- description: mode "$mode_system"
+  keys:
+  - META
+  - '0'
+  name: META+0
+  tags:
+  - mode
+  - '"$mode_system"'
+- description: mode "resize"
+  keys:
+  - META
+  - R
+  name: META+r
+  tags:
+  - mode
+  - '"resize"'
+- description: bar mode toggle
+  keys:
+  - META
+  - M
+  name: META+m
+  tags:
+  - bar
+  - mode
+  - toggle
+- description: mode "$mode_gaps"
+  keys:
+  - META
+  - SHIFT
+  - G
+  name: META+SHIFT+g
+  tags:
+  - mode
+  - '"$mode_gaps"'
+- description: Ctrl+Shift+s exec "scrot ~/Pictures/screenshots/$(date -s -e 'xclip
+    -selection c -t image/png < $f'"
+  keys:
+  - ''
+  name: ''
+  tags:
+  - Ctrl+Shift+s
+  - exec
+  - '"scrot'
+  - ~/Pictures/screenshots/$(date
+  - -s
+  - -e
+  - '''xclip'
+  - -selection
+  - c
+  - -t
+  - image/png
+  - <
+  - $f'"
+- description: exec playerctl play-pause
+  keys:
+  - PAUSE
+  name: Pause
+  tags:
+  - exec
+  - playerctl
+  - play-pause
+- description: exec KeeWeb
+  keys:
+  - META
+  - P
+  name: META+p
+  tags:
+  - exec
+  - KeeWeb
+- description: exec discord
+  keys:
+  - META
+  - O
+  name: META+o
+  tags:
+  - exec
+  - discord
+- description: exec skypeforlinux
+  keys:
+  - META
+  - I
+  name: META+i
+  tags:
+  - exec
+  - skypeforlinux
+- description: exec ~/bin/emojisel
+  keys:
+  - META
+  - Z
+  name: META+z
+  tags:
+  - exec
+  - ~/bin/emojisel
+- description: exec ~/bin/ttvemojisel
+  keys:
+  - META
+  - X
+  name: META+x
+  tags:
+  - exec
+  - ~/bin/ttvemojisel
+- description: move position center
+  keys:
+  - META
+  - CONTROL
+  - C
+  name: META+CONTROL+c
+  tags:
+  - move
+  - position
+  - center
+- description: exec ps aux | egrep '[i]3bar' && pkill i3bar || i3-msg restart
+  keys:
+  - META
+  - T
+  name: META+t
+  tags:
+  - exec
+  - ps
+  - aux
+  - '|'
+  - egrep
+  - '''[i]3bar'''
+  - '&&'
+  - pkill
+  - i3bar
+  - '||'
+  - i3-msg
+  - restart
+wm_class: i3
+wm_name: i3
