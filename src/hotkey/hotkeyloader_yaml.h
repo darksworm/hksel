@@ -2,15 +2,17 @@
 #include <fstream>
 #include <iostream>
 #include <assert.h>
+#include <filesystem>
 
 #include "yaml-cpp/yaml.h"
-
 #include "hotkey.h"
+
+namespace fs = std::filesystem;
 
 /**
  * Loads hotkeys from yaml_file_path into hotkeys vector
  */
-static void load_hotkeys_yaml(char *yaml_file_path, std::vector<Hotkey> *hotkeys) {
+static void load_hotkeys_yaml(const std::string &yaml_file_path, std::vector<Hotkey> *hotkeys) {
     YAML::Node yaml_config = YAML::LoadFile(yaml_file_path);
 
     if (!yaml_config["hotkeys"]) {
@@ -34,7 +36,7 @@ static void load_hotkeys_yaml(char *yaml_file_path, std::vector<Hotkey> *hotkeys
         // TODO: verify that the defined keys are valid
 
         std::unordered_set<std::string> keys_set;
-        for(auto &key : keys_str) {
+        for (auto &key : keys_str) {
             keys_set.insert(key);
         }
 
@@ -42,5 +44,22 @@ static void load_hotkeys_yaml(char *yaml_file_path, std::vector<Hotkey> *hotkeys
     }
 
     std::cout << hotkeys->capacity();
+}
+
+static void load_hotkeys_dir(const char *hotkey_conf_dir, std::vector<Hotkey> *hotkeys) {
+    for (const auto &entry : fs::directory_iterator(hotkey_conf_dir)) {
+        std::cout << entry.path() << std::endl;
+        auto path = entry.path().string();
+
+        if (path.length() <= 5) {
+            continue;
+        }
+
+        if (0 != path.compare(path.length() - 5, 5, ".yaml")) {
+            continue;
+        }
+
+        load_hotkeys_yaml(path, hotkeys);
+    }
 }
 

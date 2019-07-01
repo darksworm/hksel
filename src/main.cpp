@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     std::vector<Hotkey> hotkeys;
 
     // TODO: config manager?
-    load_hotkeys_yaml((char *) "../static/i3.yaml", &hotkeys);
+    load_hotkeys_dir("../static/conf.d/", &hotkeys);
 
     std::unique_ptr<WindowManager> windowManager(new WindowManager());
     std::unique_ptr<KeyboardManager> keyboardManager(new KeyboardManager());
