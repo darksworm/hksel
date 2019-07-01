@@ -48,7 +48,6 @@ static void load_hotkeys_yaml(const std::string &yaml_file_path, std::vector<Hot
 
 static void load_hotkeys_dir(const char *hotkey_conf_dir, std::vector<Hotkey> *hotkeys) {
     for (const auto &entry : fs::directory_iterator(hotkey_conf_dir)) {
-        std::cout << entry.path() << std::endl;
         auto path = entry.path().string();
 
         if (path.length() <= 5) {
