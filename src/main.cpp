@@ -8,7 +8,6 @@
 #include <X11/extensions/XTest.h>
 
 #include "gui/WindowManager.h"
-#include "input/KeyboardManager.h"
 #include "lib/keycode/keycode.h"
 #include "hotkey/hotkeyloader_yaml.h"
 #include "gui/drawer/ShapeDrawerFactory.h"
@@ -22,9 +21,7 @@
 #include "input/handler/instruction/ModeChangeInstruction.h"
 #include "input/handler/instruction/FilterInstruction.h"
 
-#define CONSUME_KB false
 #define DEBUG true
-
 
 void drawText(WindowManager *windowManager, const std::string &text, Dimensions position) {
     auto display = windowManager->getDisplay();
@@ -58,7 +55,6 @@ int main(int argc, char *argv[]) {
     load_hotkeys_dir("../static/conf.d/", &hotkeys);
 
     std::unique_ptr<WindowManager> windowManager(new WindowManager());
-    std::unique_ptr<KeyboardManager> keyboardManager(new KeyboardManager());
     std::unique_ptr<HotkeyPickerDrawer> hotkeyPickerDrawer(
             new HotkeyPickerDrawer(windowManager.get(), ShapeType::RECTANGLE, &hotkeys));
 
@@ -67,11 +63,6 @@ int main(int argc, char *argv[]) {
 
     XKeyboardState initKBState;
     XGetKeyboardControl(display, &initKBState);
-
-    if (CONSUME_KB && !keyboardManager->openKeyboard()) {
-        printf("Couldn't open keyboard");
-        exit(1);
-    }
 
     InputMode state = InputMode::SELECTION;
     int keep_running = 1;
@@ -98,18 +89,12 @@ int main(int argc, char *argv[]) {
                     break;
 
                 case KeyPress: {
-                    if (CONSUME_KB) {
-                        break;
-                    }
                     eventType = KeyPress;
                     keyCode = x11_keycode_to_libinput_code(XLookupKeysym(&event.xkey, 0));
                     break;
                 }
 
                 case KeyRelease:
-                    if (CONSUME_KB) {
-                        break;
-                    }
                     eventType = KeyRelease;
                     keyCode = x11_keycode_to_libinput_code(XLookupKeysym(&event.xkey, 0));
                     break;
@@ -121,11 +106,6 @@ int main(int argc, char *argv[]) {
                     hotkeyPickerDrawer->drawFrame(hk);
                     break;
             }
-        }
-
-        if (CONSUME_KB) {
-            // todo: handle exception
-            keyCode = (unsigned) keyboardManager->readKeypress();
         }
 
         /*
@@ -220,10 +200,6 @@ int main(int argc, char *argv[]) {
         static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
         drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
 #endif
-    }
-
-    if (CONSUME_KB) {
-        keyboardManager->closeKeyboard();
     }
 
     XKeyboardState exitKBState;
