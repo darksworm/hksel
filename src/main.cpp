@@ -20,10 +20,20 @@
 #include "input/handler/instruction/MoveInstruction.h"
 #include "input/handler/instruction/ModeChangeInstruction.h"
 #include "input/handler/instruction/FilterInstruction.h"
+#include "config/ConfigManager.h"
 
-#define DEBUG true
 
 void drawText(WindowManager *windowManager, const std::string &text, Dimensions position) {
+    XClearArea(
+            windowManager->getDisplay(),
+            windowManager->getWindow(),
+            position.x,
+            position.y,
+            300,
+            40,
+            false
+    );
+
     auto display = windowManager->getDisplay();
     auto window = windowManager->getWindow();
 
@@ -49,6 +59,8 @@ void drawText(WindowManager *windowManager, const std::string &text, Dimensions 
 }
 
 int main(int argc, char *argv[]) {
+    auto config = std::unique_ptr<Config>(ConfigManager::getOrLoadConfig());
+
     std::vector<Hotkey> hotkeys;
 
     // TODO: config manager?
@@ -171,42 +183,21 @@ int main(int argc, char *argv[]) {
             XClearWindow(windowManager->getDisplay(), windowManager->getWindow());
             hotkeyPickerDrawer->drawFrame(nullptr);
 
-#if DEBUG
-            XClearArea(
-                    windowManager->getDisplay(),
-                    windowManager->getWindow(),
-                    500,
-                    50,
-                    300,
-                    100,
-                    false
-            );
-
-            drawText(windowManager.get(), "QUERY: " + filterInstruction->getFilterString(), Dimensions(500, 100));
-#endif
+            if (config->isIsDebug()) {
+                drawText(windowManager.get(), "QUERY: " + filterInstruction->getFilterString(), Dimensions(500, 100));
+            }
         }
 
-#if DEBUG
-        XClearArea(
-                windowManager->getDisplay(),
-                windowManager->getWindow(),
-                50,
-                50,
-                300,
-                100,
-                false
-        );
-
-        static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
-        drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
-#endif
+        if (config->isIsDebug()) {
+            static const char *inputModes[] = {"SELECTION", "KEY_FILTER", "TEXT_FILTER"};
+            drawText(windowManager.get(), inputModes[(int) state], Dimensions(100, 100));
+        }
     }
 
     XKeyboardState exitKBState;
     XGetKeyboardControl(display, &exitKBState);
 
-    if(exitKBState.led_mask & 1 != initKBState.led_mask & 1)
-    {
+    if (exitKBState.led_mask & 1 != initKBState.led_mask & 1) {
         auto capsKeycode = XKeysymToKeycode(display, XK_Caps_Lock);
 
         // Simulate Press
