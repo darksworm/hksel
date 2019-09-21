@@ -60,12 +60,20 @@ void HotkeyPickerDrawer::drawFrame(Hotkey *selectedHotkey) {
     }
 
     bool hasNextPage = false;
-    if (it != hotkeys->end() && ++it != hotkeys->end()) {
-        for (; it != hotkeys->end(); ++it) {
-            if (filter && !filter(&*it)) {
-                continue;
-            } else {
-                hasNextPage = true;
+
+    if(!filter) {
+        hasNextPage = it + 1 < hotkeys->end();
+    } else {
+        if(++it >= hotkeys->end()) {
+            hasNextPage = false;
+        } else {
+            for (; it != hotkeys->end(); ++it) {
+                if (filter && !filter(&*it)) {
+                    continue;
+                } else {
+                    hasNextPage = true;
+                    break;
+                }
             }
         }
     }
